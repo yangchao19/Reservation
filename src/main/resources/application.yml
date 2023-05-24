@@ -1,0 +1,14 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: 1234
+    url: jdbc:mysql://124.222.253.96/reservation?useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/config/mybatis-config.xml

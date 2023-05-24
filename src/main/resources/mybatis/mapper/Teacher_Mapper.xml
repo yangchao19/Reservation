@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.reservation.infrastructure.dao.ITeacherDao">
+
+    <resultMap id="teacher" type="com.yang.reservation.infrastructure.po.Teacher">
+        <id column="id" property="id"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="teacher_name" property="teacherName"/>
+        <result column="subject" property="subject"/>
+        <result column="phone" property="phone"/>
+        <result column="info" property="info"/>
+        <result column="register_date" property="registerDate"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="teacher">
+        INSERT INTO `teacher`
+        (teacher_id, teacher_name, subject, phone, info, register_date, update_date)
+        VALUES
+        (#{teacherId}, #{teacherName}, #{subject}, #{phone}, #{info}, now(), now())
+    </insert>
+
+    <update id="update" parameterType="teacher">
+        UPDATE teacher
+        SET teacher_name = #{teacherName}, subject = #{subject}, phone = #{phone}, info =#{info}, update_date = now()
+        WHERE teacher_id = #{teacherId}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM teacher
+        WHERE teacher_id = #{teacherId}
+    </delete>
+    <select id="queryTeacherList" resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
+        SELECT teacher_id, teacher_name, subject, phone, info, register_date, update_date
+        FROM teacher
+    </select>
+    <select id="queryTeacherById" resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
+        SELECT teacher_id, teacher_name, subject, phone, info, register_date, update_date
+        FROM teacher
+        WHERE teacher_id = #{teacherId}
+    </select>
+</mapper>

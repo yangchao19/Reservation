@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.reservation.infrastructure.dao.IStudentReserveCurriculumDao">
+
+    <resultMap id="studentReserveCurriculum" type="com.yang.reservation.infrastructure.po.StudentReserveCurriculum">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="curriculum_id" property="curriculumId"/>
+        <result column="teacher_id" property="teacherId"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="studentReserveCurriculum">
+        INSERT INTO student_reserve_curriculum
+        (student_id, curriculum_id, teacher_id)
+        VALUES
+        (#{studentId}, #{curriculumId}, #{teacherId})
+    </insert>
+    <delete id="deleteByCurriculumId" parameterType="long">
+        DELETE FROM student_reserve_curriculum
+        WHERE curriculum_id = #{curriculumId}
+    </delete>
+    <delete id="deleteByStudentId" parameterType="long">
+        DELETE FROM student_reserve_curriculum
+        WHERE student_id = #{studentId}
+    </delete>
+    <select id="queryListByStudentId"
+            parameterType="long"
+            resultType="com.yang.reservation.infrastructure.po.StudentReserveCurriculum"
+            resultMap="studentReserveCurriculum">
+        SELECT student_id, curriculum_id, teacher_id
+        FROM student_reserve_curriculum
+        WHERE student_id = #{studentId}
+    </select>
+    <select id="query" resultType="com.yang.reservation.infrastructure.po.StudentReserveCurriculum" resultMap="studentReserveCurriculum">
+        SELECT student_id, curriculum_id, teacher_id
+        FROM student_reserve_curriculum
+        WHERE student_id = #{studentId} AND curriculum_id = #{curriculumId}
+    </select>
+</mapper>

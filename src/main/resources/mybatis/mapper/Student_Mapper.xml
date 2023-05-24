@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.reservation.infrastructure.dao.IStudentDao">
+
+    <resultMap id="student" type="com.yang.reservation.infrastructure.po.Student">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="student_name" property="studentName"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="phone" property="phone"/>
+        <result column="grade" property="grade"/>
+        <result column="register_date" property="registerDate"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.yang.reservation.infrastructure.po.Student">
+        INSERT INTO student
+        (student_id, student_name, parent_name, phone, grade, register_date, update_date)
+        VALUES
+        (#{studentId}, #{studentName}, #{parentName}, #{phone}, #{grade}, now(), now())
+    </insert>
+
+    <update id="update" parameterType="student">
+        UPDATE student
+        SET student_name = #{studentName}, parent_name = #{parentName}, phone = #{phone}, grade = #{grade}, update_date = now()
+        WHERE student_id = #{studentId}
+    </update>
+    <delete id="deleteByStudentId">
+        DELETE FROM student
+        WHERE student_id = #{studentId}
+    </delete>
+
+    <select id="queryByStudentId" parameterType="Long" resultType="com.yang.reservation.infrastructure.po.Student" resultMap="student">
+        SELECT student_id, student_name, parent_name, phone, grade, register_date, update_date
+        FROM student
+        WHERE student_id = #{studentId}
+    </select>
+
+    <select id="queryList" resultType="com.yang.reservation.infrastructure.po.Student" resultMap="student">
+        SELECT student_id, student_name, parent_name, phone, grade, register_date, update_date
+        FROM student
+    </select>
+
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.reservation.infrastructure.dao.ICurriculumDao">
+
+    <resultMap id="curriculum" type="com.yang.reservation.infrastructure.po.Curriculum">
+        <id column="id" property="id"/>
+        <result column="curriculum_id" property="curriculumId"/>
+        <result column="curriculum_name" property="curriculumName"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="stock" property="stock"/>
+        <result column="stock_used" property="stockUsed"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="info" property="info"/>
+    </resultMap>
+
+    <insert id="insertCurriculum" parameterType="com.yang.reservation.infrastructure.po.Curriculum">
+        INSERT INTO curriculum
+        (curriculum_id, curriculum_name, teacher_id, stock, stock_used, begin_time, end_time, info)
+        VALUES
+        (#{curriculumId}, #{curriculumName}, #{teacherId}, #{stock}, #{stockUsed}, #{beginTime}, #{endTime}, #{info})
+    </insert>
+
+    <update id="updateCurriculum" parameterType="curriculum">
+        UPDATE curriculum
+        SET curriculum_name = #{curriculumName}, teacher_id = #{teacherId}, stock = #{stock}, stock_used = #{stockUsed}, begin_time = #{beginTime}, end_time = #{endTime}, info = #{info}
+        WHERE curriculum_id = #{curriculumId}
+    </update>
+    <update id="subtractionCurriculumStock" parameterType="long">
+        UPDATE curriculum
+        SET stock_used = stock_used + 1
+        Where stock - stock_used > 0 AND curriculum_id = #{curriculumId}
+    </update>
+
+    <delete id="deleteCurriculum">
+        DELETE FROM curriculum
+        WHERE now() - end_time > 0
+    </delete>
+
+    <select id="queryList" parameterType="date" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
+        SELECT curriculum_id, curriculum_name, teacher_id, stock, stock_used, begin_time, end_time, info
+        FROM curriculum
+        WHERE end_time > now() AND #{end} > end_time
+    </select>
+
+
+    <select id="queryCurriculumById"  parameterType="long" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
+        SELECT curriculum_id, curriculum_name, teacher_id, stock, stock_used, begin_time, end_time, info
+        FROM curriculum
+        WHERE curriculum_id = #{curriculumId}
+    </select>
+</mapper>
