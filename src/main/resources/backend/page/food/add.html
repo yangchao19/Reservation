@@ -350,74 +350,10 @@
               }
             })
           },
-          // 按钮 - 添加口味
-          addFlavore () {
-            this.dishFlavors.push({'name': '', 'value': [], showOption: false}) // JSON.parse(JSON.stringify(this.dishFlavorsData))
-          },
 
-          // 按钮 - 删除口味
-          delFlavor (ind) {
-            this.dishFlavors.splice(ind, 1)
-          },
 
-          // 按钮 - 删除口味标签
-          delFlavorLabel (index, ind) {
-            this.dishFlavors[index].value.splice(ind, 1)
-          },
 
-          //口味位置记录
-          flavorPosition (index) {
-            this.index = index
-          },
 
-          // 添加口味标签
-          keyDownHandle (val,index) {
-            console.log('keyDownHandle----val',val)
-            console.log('keyDownHandle----index',index)
-            console.log('keyDownHandle----this.dishFlavors',this.dishFlavors)
-            if (event) {
-              event.cancelBubble = true
-              event.preventDefault()
-              event.stopPropagation()
-            }
-
-            if (val.target.innerText.trim() != '') {
-              this.dishFlavors[index].value.push(val.target.innerText)
-              val.target.innerText = ''
-            }
-          },
-
-          // 获取菜品分类
-          getDishList () {
-            getCategoryList({ 'type': 1 }).then(res => {
-              if (res.code === 1) {
-                this.dishList = res.data
-              } else {
-                this.$message.error(res.msg || '操作失败')
-              }
-            })
-          },
-
-          // 获取口味列表
-          getFlavorListHand () {
-            // flavor flavorData
-            this.dishFlavorsData = [
-              {'name':'甜味','value':['无糖','少糖','半糖','多糖','全糖']},
-              {'name':'温度','value':['热饮','常温','去冰','少冰','多冰']},
-              {'name':'忌口','value':['不要葱','不要蒜','不要香菜','不要辣']},
-              {'name':'辣度','value':['不辣','微辣','中辣','重辣']}
-            ]
-          },
-
-          selectFlavor(st,index){
-            console.log('st',st)
-            console.log('index',index)
-            console.log('this.dishFlavors',this.dishFlavors)
-            const obj = JSON.parse(JSON.stringify(this.dishFlavors[index]))
-            obj.showOption = st
-            this.dishFlavors.splice(index,1,obj)
-            // this.dishFlavors[index].showOption = st
-          },
 
           outSelect(st,index){
             const _this = this

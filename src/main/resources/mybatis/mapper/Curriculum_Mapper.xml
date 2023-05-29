@@ -7,6 +7,8 @@
         <result column="curriculum_id" property="curriculumId"/>
         <result column="curriculum_name" property="curriculumName"/>
         <result column="teacher_id" property="teacherId"/>
+        <result column="teacher_name" property="teacherName"/>
+        <result column="price" property="price"/>
         <result column="stock" property="stock"/>
         <result column="stock_used" property="stockUsed"/>
         <result column="begin_time" property="beginTime"/>
@@ -16,14 +18,14 @@
 
     <insert id="insertCurriculum" parameterType="com.yang.reservation.infrastructure.po.Curriculum">
         INSERT INTO curriculum
-        (curriculum_id, curriculum_name, teacher_id, stock, stock_used, begin_time, end_time, info)
+        (curriculum_id, curriculum_name, teacher_id, teacher_name, price, stock, stock_used, begin_time, end_time, info)
         VALUES
-        (#{curriculumId}, #{curriculumName}, #{teacherId}, #{stock}, #{stockUsed}, #{beginTime}, #{endTime}, #{info})
+        (#{curriculumId}, #{curriculumName}, #{teacherId}, #{teacherName}, #{price}, #{stock}, #{stockUsed}, #{beginTime}, #{endTime}, #{info})
     </insert>
 
     <update id="updateCurriculum" parameterType="curriculum">
         UPDATE curriculum
-        SET curriculum_name = #{curriculumName}, teacher_id = #{teacherId}, teacher_name = #{teacherName}, stock = #{stock}, stock_used = #{stockUsed}, begin_time = #{beginTime}, end_time = #{endTime}, info = #{info}
+        SET curriculum_name = #{curriculumName}, teacher_id = #{teacherId}, teacher_name = #{teacherName}, price = #{price}, stock = #{stock}, stock_used = #{stockUsed}, begin_time = #{beginTime}, end_time = #{endTime}, info = #{info}
         WHERE curriculum_id = #{curriculumId}
     </update>
     <update id="subtractionCurriculumStock" parameterType="long">
@@ -38,10 +40,10 @@
     </delete>
 
     <select id="queryList" parameterType="date" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
-        SELECT curriculum_id, curriculum_name, teacher_id, teacher_name, stock, stock_used, begin_time, end_time, info
+        SELECT curriculum_id, curriculum_name, teacher_id, teacher_name, price, stock, stock_used, begin_time, end_time, info
         FROM curriculum
         <where>
-            <if test="name != null and name != '' ">
+            <if test="curriculumName != null and curriculumName != '' ">
                 curriculum_name LIKE #{curriculumName}
             </if>
         </where>
@@ -50,7 +52,7 @@
 
 
     <select id="queryCurriculumById"  parameterType="long" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
-        SELECT curriculum_id, curriculum_name, teacher_id,teacher_name, stock, stock_used, begin_time, end_time, info
+        SELECT curriculum_id, curriculum_name, teacher_id,teacher_name, price, stock, stock_used, begin_time, end_time, info
         FROM curriculum
         WHERE curriculum_id = #{curriculumId}
     </select>

@@ -1,9 +1,14 @@
 package com.yang.reservation.interfaces;
 
 import com.yang.reservation.application.ICurriculumService;
+import com.yang.reservation.application.ITeacherService;
 import com.yang.reservation.common.Page;
 import com.yang.reservation.common.Return;
+import com.yang.reservation.infrastructure.dao.ITeacherDao;
 import com.yang.reservation.infrastructure.po.Curriculum;
+import com.yang.reservation.infrastructure.po.Teacher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -20,8 +25,16 @@ import java.nio.file.attribute.UserPrincipalLookupService;
 @RequestMapping("/curriculum")
 public class CurriculumController {
 
+    private Logger logger = LoggerFactory.getLogger(CurriculumController.class);
+
     @Resource
     private ICurriculumService curriculumService;
+
+    @Resource
+    private ITeacherService teacherService;
+
+    @Resource
+    private ITeacherDao teacherDao;
 
 //    function getCurriculumList (params) {
 //        return $axios({
@@ -107,9 +120,20 @@ public class CurriculumController {
      * @return
      */
     @PostMapping
-    public Return<String> add (HttpServletRequest request, @RequestBody Curriculum curriculum) {
-        long teacherId = (long)request.getSession().getAttribute("teacher");
-        curriculum.setTeacherId(teacherId);
-        return Return.success("新增成功");
+    public Return<String> add (@RequestBody Curriculum curriculum) {
+
+        logger.info("curriculum:{}",curriculum);
+
+        Teacher teacher = teacherDao.queryByTeacherName(curriculum.getTeacherName());
+
+        logger.info("teacher:{}",teacher);
+        if (null != teacher) {
+            curriculum.setTeacherId(teacher.getTeacherId());
+            curriculumService.add(curriculum);
+            return Return.success("新增成功");
+        }else  {
+            return Return.error("教师姓名填写错误");
+        }
+
     }
 }

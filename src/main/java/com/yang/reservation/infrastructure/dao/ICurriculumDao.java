@@ -29,7 +29,7 @@ public interface ICurriculumDao {
      * @param curriculumName
      * @return
      */
-    List<Curriculum> queryList (@Param("page") long page, @Param("pageSize") long pageSize, @Param("CurriculumName") String curriculumName);
+    List<Curriculum> queryList (@Param("page") long page, @Param("pageSize") long pageSize, @Param("curriculumName") String curriculumName);
 
     /**
      * 总课程数查询

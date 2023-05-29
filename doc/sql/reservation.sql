@@ -71,6 +71,7 @@ CREATE TABLE `curriculum`(
     `curriculum_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '课程名称',
     `teacher_id` BIGINT(20) NOT NULL COMMENT '教师ID',
     `teacher_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教师姓名',
+    `price` INT DEFAULT 0 COMMENT '价格',
     `stock` INT NOT NULL COMMENT '课程可预约总数',
     `stock_used` INT NOT NULL COMMENT '课程已预约数',
     `begin_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '课程开始时间',
@@ -86,7 +87,7 @@ CREATE TABLE `curriculum`(
 -- Records of curriculum
 -- ----------------------------
 BEGIN;
-INSERT INTO `curriculum` VALUES (1, '10008','测试课程', '100001', 'admin', 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', '课程备注信息');
+INSERT INTO `curriculum` VALUES (1, '10008','测试课程', '100001', 'admin',80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', '课程备注信息');
 COMMIT;
 
 

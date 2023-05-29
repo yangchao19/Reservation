@@ -39,8 +39,8 @@
         SELECT student_id, student_name, parent_name, phone, grade, register_date, update_date
         FROM student
         <where>
-            <if test="studentId != null and studentId != '' ">
-                student_name LIKE #{name}
+            <if test="studentName != null and studentName != '' ">
+                student_name LIKE #{studentName}
             </if>
         </where>
         LIMIT #{page}, #{pageSize}

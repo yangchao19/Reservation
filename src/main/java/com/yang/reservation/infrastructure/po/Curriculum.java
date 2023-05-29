@@ -35,6 +35,11 @@ public class Curriculum {
     private String teacherName;
 
     /**
+     * 价格
+     */
+    private int price;
+
+    /**
      * 课程可预约总人数
      */
     private int stock;
@@ -99,6 +104,14 @@ public class Curriculum {
         this.teacherName = teacherName;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public int getStock() {
         return stock;
     }
@@ -147,6 +160,7 @@ public class Curriculum {
                 ", curriculumName='" + curriculumName + '\'' +
                 ", teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
+                ", price=" + price +
                 ", stock=" + stock +
                 ", stockUsed=" + stockUsed +
                 ", beginTime=" + beginTime +
