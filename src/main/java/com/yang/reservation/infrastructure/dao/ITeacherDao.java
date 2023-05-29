@@ -1,7 +1,9 @@
 package com.yang.reservation.infrastructure.dao;
 
+import com.yang.reservation.common.Page;
 import com.yang.reservation.infrastructure.po.Teacher;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -33,15 +35,38 @@ public interface ITeacherDao {
     int update(Teacher teacher);
 
     /**
-     * 查询所有教师信息列表
-     * @return 教师信息列表
+     * 分页查询
+     * @param page
+     * @param pageSize
+     * @param teacherName
+     * @return
      */
-    List<Teacher> queryTeacherList ();
+    List<Teacher> queryTeacherList (@Param("page") long page, @Param("pageSize") long pageSize, @Param("teacherName") String teacherName);
 
     /**
-     * 查询教师信息
+     *列表行数
+     * @return
+     */
+    int count ();
+
+    /**
+     * 根据教师Id查询教师信息
      * @param TeacherId 教师ID
      * @return 教师信息
      */
     Teacher queryTeacherById (Long TeacherId);
+
+    /**
+     * 根据用户名查询教师信息
+     * @param username 用户名
+     * @return 教师信息
+     */
+    Teacher queryByUsername (String username);
+
+    /**
+     * 根据教师名查询 教师信息
+     * @param teacherName
+     * @return
+     */
+    Teacher queryByTeacherName (String teacherName);
 }

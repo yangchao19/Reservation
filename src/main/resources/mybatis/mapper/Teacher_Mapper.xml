@@ -5,24 +5,36 @@
     <resultMap id="teacher" type="com.yang.reservation.infrastructure.po.Teacher">
         <id column="id" property="id"/>
         <result column="teacher_id" property="teacherId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="teacher_id" property="teacherId"/>
         <result column="teacher_name" property="teacherName"/>
         <result column="subject" property="subject"/>
         <result column="phone" property="phone"/>
         <result column="info" property="info"/>
         <result column="register_date" property="registerDate"/>
         <result column="update_date" property="updateDate"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="updater_id" property="updaterId"/>
     </resultMap>
 
     <insert id="insert" parameterType="teacher">
         INSERT INTO `teacher`
-        (teacher_id, teacher_name, subject, phone, info, register_date, update_date)
+        (teacher_id, username, password, status ,teacher_name, subject, phone, info, register_date, update_date, creator_id, updater_id)
         VALUES
-        (#{teacherId}, #{teacherName}, #{subject}, #{phone}, #{info}, now(), now())
+        (#{teacherId}, #{username}, #{password}, #{status}, #{teacherName}, #{subject}, #{phone}, #{info}, now(), now(), #{creatorId}, #{updaterId})
     </insert>
 
     <update id="update" parameterType="teacher">
         UPDATE teacher
-        SET teacher_name = #{teacherName}, subject = #{subject}, phone = #{phone}, info =#{info}, update_date = now()
+        SET teacher_name = COALESCE(#{teacherName},teacher_name),
+            status = COALESCE(#{status},status),
+            subject = COALESCE(#{subject}, subject),
+            phone = COALESCE(#{phone}, phone),
+            info = COALESCE(#{info}, info),
+            update_date = now(),
+            updater_id = COALESCE(#{updaterId}, updater_id)
         WHERE teacher_id = #{teacherId}
     </update>
 
@@ -30,13 +42,32 @@
         DELETE FROM teacher
         WHERE teacher_id = #{teacherId}
     </delete>
-    <select id="queryTeacherList" resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
-        SELECT teacher_id, teacher_name, subject, phone, info, register_date, update_date
+    <select id="queryTeacherList"  resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
+        SELECT teacher_id, username, status, teacher_name, subject, phone, info, register_date, update_date
         FROM teacher
+        <where>
+            <if test="teacherName != null and teacherName != '' ">
+                teacher_name LIKE #{teacherName}
+            </if>
+        </where>
+        LIMIT #{page},#{pageSize}
     </select>
     <select id="queryTeacherById" resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
-        SELECT teacher_id, teacher_name, subject, phone, info, register_date, update_date
+        SELECT teacher_id, username, password, status, teacher_name, subject, phone, info, register_date, update_date
         FROM teacher
         WHERE teacher_id = #{teacherId}
+    </select>
+    <select id="queryByUsername" parameterType="string" resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
+        SELECT teacher_id, username, password, status, teacher_name, subject, phone, info, register_date, update_date
+        FROM teacher
+        WHERE username = #{username}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM teacher
+    </select>
+    <select id="queryByTeacherName" parameterType="string" resultType="com.yang.reservation.infrastructure.po.Teacher" resultMap="teacher">
+        SELECT teacher_id, username, password, status, teacher_name, subject, phone, info, register_date, update_date
+        FROM teacher
+        WHERE teacher_name LIKE #{teacherName}
     </select>
 </mapper>

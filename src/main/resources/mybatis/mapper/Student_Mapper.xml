@@ -38,6 +38,15 @@
     <select id="queryList" resultType="com.yang.reservation.infrastructure.po.Student" resultMap="student">
         SELECT student_id, student_name, parent_name, phone, grade, register_date, update_date
         FROM student
+        <where>
+            <if test="studentId != null and studentId != '' ">
+                student_name LIKE #{name}
+            </if>
+        </where>
+        LIMIT #{page}, #{pageSize}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM student
     </select>
 
 

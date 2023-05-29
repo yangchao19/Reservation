@@ -2,6 +2,7 @@ package com.yang.reservation.infrastructure.dao;
 
 import com.yang.reservation.infrastructure.po.Curriculum;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -22,11 +23,19 @@ public interface ICurriculumDao {
     void insertCurriculum (Curriculum curriculum);
 
     /**
-     * 根据截至时间查询课程列表
-     * @param end 截止时间
-     * @return 符合要求的课程列表
+     * 分页查询课程(也可以按照信息查询)
+     * @param page
+     * @param pageSize
+     * @param curriculumName
+     * @return
      */
-    List<Curriculum> queryList (Date end);
+    List<Curriculum> queryList (@Param("page") long page, @Param("pageSize") long pageSize, @Param("CurriculumName") String curriculumName);
+
+    /**
+     * 总课程数查询
+     * @return
+     */
+    int count ();
 
     /**
      * 根据课程id查询课程
@@ -43,8 +52,9 @@ public interface ICurriculumDao {
     /**
      * 更新课程信息
      * @param curriculum 课程信息
+     * @return
      */
-    void updateCurriculum (Curriculum curriculum);
+    int updateCurriculum (Curriculum curriculum);
 
     /**
      * 根据预约课程id，增加预约人数

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
+  <link rel="stylesheet" href="../../styles/common.css" />
+  <link rel="stylesheet" href="../../styles/page.css" />
+</head>
+<body>
+  <div class="addBrand-container" id="member-add-app">
+    <div class="container">
+      <el-form
+        ref="ruleForm"
+        :model="ruleForm"
+        :rules="rules"
+        :inline="false"
+        label-width="180px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="账号:" prop="username">
+          <el-input v-model="ruleForm.username" placeholder="请输入账号" maxlength="20"/>
+        </el-form-item>
+        <el-form-item
+          label="教师姓名:"
+          prop="teacherName"
+        >
+          <el-input
+            v-model="ruleForm.teacherName"
+            placeholder="请输入教师姓名"
+            maxlength="20"
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="手机号:"
+          prop="phone"
+        >
+          <el-input
+            v-model="ruleForm.phone"
+            placeholder="请输入手机号"
+            maxlength="20"
+          />
+        </el-form-item>
+
+        <el-form-item
+                label="科目:"
+                prop="subject"
+        >
+          <el-radio-group v-model="ruleForm.subject">
+            <el-radio label="语文"></el-radio>
+            <el-radio label="数学"></el-radio>
+            <el-radio label="外语"></el-radio>
+            <el-radio label="物理"></el-radio>
+            <el-radio label="化学"></el-radio>
+            <el-radio label="生物"></el-radio>
+            <el-radio label="政治"></el-radio>
+            <el-radio label="历史"></el-radio>
+            <el-radio label="地理"></el-radio>
+            <el-radio label="技术"></el-radio>
+            <el-radio label="其他"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <div class="subBox address">
+          <el-form-item>
+            <el-button  @click="goBack()">
+              取消
+            </el-button>
+            <el-button
+              type="primary"
+              @click="submitForm('ruleForm', false)"
+            >
+              保存
+            </el-button>
+            <el-button
+              v-if="actionType == 'add'"
+              type="primary"
+              class="continue"
+              @click="submitForm('ruleForm', true)"
+            >
+              保存并继续添加
+            </el-button>
+          </el-form-item>
+        </div>
+      </el-form>
+    </div>
+  </div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="../../plugins/vue/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="../../plugins/element-ui/index.js"></script>
+    <!-- 引入axios -->
+    <script src="../../plugins/axios/axios.min.js"></script>
+    <script src="../../js/request.js"></script>
+    <script src="../../api/member.js"></script>
+    <script src="../../js/validate.js"></script>
+    <script src="../../js/index.js"></script>
+    <script>
+      new Vue({
+        el: '#member-add-app',
+        data() {
+          return {
+            id: '',
+            actionType : '',
+            ruleForm : {
+                'teacherName': '',
+                'phone': '',
+                'subject': '语文',
+                username: ''
+            }
+          }
+        },
+        computed: {
+          rules () {
+            return {
+              //账号
+              username: [
+                {
+                  required: true, 'validator': checkUserName, trigger: 'blur'
+                }
+              ],
+              //姓名
+              name: [{ required: true, 'validator': checkName, 'trigger': 'blur' }],
+              'phone': [{ 'required': true, 'validator': checkPhone, 'trigger': 'blur' }],
+              'idNumber': [{ 'required': true, 'validator': validID, 'trigger': 'blur' }]
+            }
+          }
+        },
+        created() {
+          this.teacherId = requestUrlParam('teacherId')
+          this.actionType = this.teacherId ? 'edit' : 'add'
+          if (this.teacherId) {
+            this.init()
+          }
+        },
+        mounted() {
+        },
+        methods: {
+          async init () {
+            queryTeacherById(this.teacherId).then(res => {
+              console.log(res)
+              if (String(res.code) === '1') {
+                console.log(res.data)
+                this.ruleForm = res.data
+                //this.ruleForm.subject = res.data.subject === '0' ? '女' : '男'
+                switch (res.data.subject) {
+                  case 1:
+                    this.ruleForm.subject = '语文';
+                    break;
+                  case 2:
+                    this.ruleForm.subject = '数学';
+                    break;
+                  case 3:
+                    this.ruleForm.subject = '外语';
+                    break;
+                  case 4:
+                    this.ruleForm.subject = '物理';
+                    break;
+                  case 5:
+                    this.ruleForm.subject = '化学';
+                    break;
+                  case 6:
+                    this.ruleForm.subject = '生物';
+                    break;
+                  case 7:
+                    this.ruleForm.subject = '政治';
+                    break;
+                  case 8:
+                    this.ruleForm.subject = '历史';
+                    break;
+                  case 9:
+                    this.ruleForm.subject = '地理';
+                    break;
+                  case 10:
+                    this.ruleForm.subject = '技术';
+                    break;
+                  default:
+                    this.ruleForm.subject = '其他';
+                }
+                // this.ruleForm.password = ''
+              } else {
+                this.$message.error(res.msg || '操作失败')
+              }
+            })
+          },
+          submitForm (formName, st) {
+            this.$refs[formName].validate((valid) => {
+              if (valid) {
+                if (this.actionType === 'add') {
+                  let subject;
+                  switch (this.ruleForm.subject) {
+                    case "语文":
+                      subject = 1;
+                      break;
+                    case "数学":
+                      subject = 2;
+                      break;
+                    case "外语":
+                      subject = 3;
+                      break;
+                    case "物理":
+                      subject = 4;
+                      break;
+                    case "化学":
+                      subject = 5;
+                      break;
+                    case "生物":
+                      subject = 6;
+                      break;
+                    case "政治":
+                      subject = 7;
+                      break;
+                    case "历史":
+                      subject = 8;
+                      break;
+                    case "地理":
+                      subject = 9;
+                      break;
+                    case "技术":
+                      subject = 10;
+                      break;
+                    case "其他":
+                      subject = 0;
+                      break;
+                  }
+                  const params = {
+                    ...this.ruleForm,
+                    subject: subject
+                  }
+                  addTeacher(params).then(res => {
+                    if (res.code === 1) {
+                      this.$message.success('教师添加成功！')
+                      if (!st) {
+                        this.goBack()
+                      } else {
+                        this.ruleForm = {
+                          username: '',
+                          'teacherName': '',
+                          'phone': '',
+                          // 'password': '',
+                          // 'rePassword': '',/
+                          'subject': '其他',
+                        }
+                      }
+                    } else {
+                      this.$message.error(res.msg || '操作失败')
+                    }
+                  }).catch(err => {
+                    this.$message.error('请求出错了：' + err)
+                  })
+                } else {
+                  let subject;
+                  switch (this.ruleForm.subject) {
+                    case "语文":
+                      subject = 1;
+                      break;
+                    case "数学":
+                      subject = 2;
+                      break;
+                    case "外语":
+                      subject = 3;
+                      break;
+                    case "物理":
+                      subject = 4;
+                      break;
+                    case "化学":
+                      subject = 5;
+                      break;
+                    case "生物":
+                      subject = 6;
+                      break;
+                    case "政治":
+                      subject = 7;
+                      break;
+                    case "历史":
+                      subject = 8;
+                      break;
+                    case "地理":
+                      subject = 9;
+                      break;
+                    case "技术":
+                      subject = 10;
+                      break;
+                    case "其他":
+                      subject = 0;
+                      break;
+                    default:
+                      subject = 0;
+                      break;
+                  }
+                  const params = {
+                    ...this.ruleForm,
+                    subject: subject
+                  }
+                  editTeacher(params).then(res => {
+                    if (res.code === 1) {
+                      this.$message.success('教师信息修改成功！')
+                      this.goBack()
+                    } else {
+                      this.$message.error(res.msg || '操作失败')
+                    }
+                  }).catch(err => {
+                    this.$message.error('请求出错了：' + err)
+                  })
+                }
+              } else {
+                console.log('error submit!!')
+                return false
+              }
+            })
+          },
+          goBack(){
+            window.parent.menuHandle({
+              id: '2',
+              url: '/backend/page/member/list.html',
+              name: '教师管理'
+            },false)
+          }
+        }
+      })
+    </script>
+</body>
+</html>

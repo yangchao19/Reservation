@@ -30,6 +30,11 @@ public class Curriculum {
     private Long teacherId;
 
     /**
+     * 教师姓名
+     */
+    private String teacherName;
+
+    /**
      * 课程可预约总人数
      */
     private int stock;
@@ -86,6 +91,14 @@ public class Curriculum {
         this.teacherId = teacherId;
     }
 
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
     public int getStock() {
         return stock;
     }
@@ -133,6 +146,7 @@ public class Curriculum {
                 ", curriculumId=" + curriculumId +
                 ", curriculumName='" + curriculumName + '\'' +
                 ", teacherId=" + teacherId +
+                ", teacherName='" + teacherName + '\'' +
                 ", stock=" + stock +
                 ", stockUsed=" + stockUsed +
                 ", beginTime=" + beginTime +

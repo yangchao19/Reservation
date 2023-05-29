@@ -2,6 +2,7 @@ package com.yang.reservation.infrastructure.dao;
 
 import com.yang.reservation.infrastructure.po.Student;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -40,8 +41,17 @@ public interface IStudentDao {
     Student queryByStudentId (Long studentId);
 
     /**
-     * 查询所有学生信息
-     * @return 学生信息列表
+     * 查询总数
+     * @return
      */
-    List<Student> queryList ();
+    int count ();
+
+    /**
+     * 分页查询学生信息
+     * @param page
+     * @param pageSize
+     * @param studentName
+     * @return
+     */
+    List<Student> queryList (@Param("page") long page, @Param("pageSize") long pageSize, @Param("studentName") String studentName);
 }

@@ -1,6 +1,7 @@
 package com.yang.reservation.dao;
 
 import com.alibaba.fastjson.JSON;
+import com.yang.reservation.common.Page;
 import com.yang.reservation.infrastructure.dao.ITeacherDao;
 import com.yang.reservation.infrastructure.po.Teacher;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class TeacherDaoTest {
         Teacher teacher = new Teacher();
         teacher.setTeacherId(202305220001L);
         teacher.setTeacherName("李晓红");
-        teacher.setSubject("物理");
+        teacher.setSubject(1);
         teacher.setPhone("15670246029");
         teacher.setInfo("测试信息");
         teacherDao.insert(teacher);
@@ -44,7 +45,7 @@ public class TeacherDaoTest {
         Teacher teacher = new Teacher();
         teacher.setTeacherId(202305220001L);
         teacher.setTeacherName("李晓红");
-        teacher.setSubject("化学");
+        teacher.setSubject(2);
         teacher.setPhone("1234567891011");
         teacher.setInfo("更新测试信息");
         int update = teacherDao.update(teacher);
@@ -55,7 +56,12 @@ public class TeacherDaoTest {
 
     @Test
     public void test_queryList () {
-        List<Teacher> teachers = teacherDao.queryTeacherList();
+
+        Page<Teacher> page = new Page<>();
+        page.setTotal(1L);
+        page.setSize(1L);
+
+        List<Teacher> teachers = teacherDao.queryTeacherList(0,2,"杨超");
         for (Teacher teacher : teachers) {
             logger.info("教师信息：{}",JSON.toJSONString(teacher));
         }
@@ -63,7 +69,7 @@ public class TeacherDaoTest {
 
     @Test
     public void test_queryById () {
-        Teacher teacher = teacherDao.queryTeacherById(202305220001L);
+        Teacher teacher = teacherDao.queryTeacherById(100001L);
         logger.info("teacher:{}",JSON.toJSONString(teacher));
     }
 }

@@ -35,26 +35,30 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `teacher`;
 
-
-
 CREATE TABLE `teacher`(
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
     `teacher_id` BIGINT(20) NOT NULL COMMENT '教师id',
+    `username` VARCHAR(64) NOT NULL COMMENT '用户名',
+    `password` VARCHAR(64) NOT NULL COMMENT '密码',
+    `status` INT DEFAULT 1 COMMENT '用户状态信息',
     `teacher_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教师姓名',
-    `subject` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教学科目',
+    `subject` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教学科目 0：其他 1:语文 2：数学 3：外语 4：物理 5：化学 6：生物 7：政治 8：历史 9：地理 10：技术',
     `phone` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教师电话',
     `info` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教师备注信息',
     `register_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
     `update_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `creator_id` BIGINT(20) NOT NULL COMMENT '创建者id',
+    `updater_id` BIGINT(20) NOT NULL COMMENT '更新人id',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `unique_teacher_id`(`teacher_id`)
+    UNIQUE KEY `unique_teacher_id`(`teacher_id`),
+    UNIQUE KEY `unique_username`(`username`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='教师配置';
 
 -- ----------------------------
 -- Records of teacher
 -- ----------------------------
 BEGIN;
-INSERT INTO `teacher` VALUES (1, '100001', '教师名', '科目', '1234567890', '备注信息',  '2023-05-01 00:00:00', '2023-05-07 23:59:59');
+INSERT INTO `teacher` VALUES ('1', '100001', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '1', '教师名', '1', '1234567890', '备注信息',  '2023-05-01 00:00:00', '2023-05-07 23:59:59', '100001', '100001');
 COMMIT;
 
 -- ----------------------------
@@ -66,6 +70,7 @@ CREATE TABLE `curriculum`(
     `curriculum_id` BIGINT(20) NOT NULL COMMENT '课程ID',
     `curriculum_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '课程名称',
     `teacher_id` BIGINT(20) NOT NULL COMMENT '教师ID',
+    `teacher_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教师姓名',
     `stock` INT NOT NULL COMMENT '课程可预约总数',
     `stock_used` INT NOT NULL COMMENT '课程已预约数',
     `begin_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '课程开始时间',
@@ -81,7 +86,7 @@ CREATE TABLE `curriculum`(
 -- Records of curriculum
 -- ----------------------------
 BEGIN;
-INSERT INTO `curriculum` VALUES (1, '10008','测试课程', '100001', 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', '课程备注信息');
+INSERT INTO `curriculum` VALUES (1, '10008','测试课程', '100001', 'admin', 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', '课程备注信息');
 COMMIT;
 
 

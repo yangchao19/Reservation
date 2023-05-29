@@ -51,17 +51,17 @@ public class curriculumDaoTest {
 
 //    List<Curriculum> queryList (Date end);
 
-    @Test
-    public void test_query() throws ParseException {
-        String dateString = "2023-06-30";
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = format.parse(dateString);
-        List<Curriculum> curriculumList = curriculumDao.queryList(date);
-        for (Curriculum curriculum : curriculumList) {
-            logger.info("课程信息：{}",curriculum);
-            System.out.println(curriculum + "\n");
-        }
-    }
+//    @Test
+//    public void test_query() throws ParseException {
+//        String dateString = "2023-06-30";
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = format.parse(dateString);
+//        List<Curriculum> curriculumList = curriculumDao.queryList(date);
+//        for (Curriculum curriculum : curriculumList) {
+//            logger.info("课程信息：{}",curriculum);
+//            System.out.println(curriculum + "\n");
+//        }
+//    }
 
 //    Curriculum queryCurriculumById (Long curriculumId);
     @Test

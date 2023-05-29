@@ -54,12 +54,12 @@ public class StudentDaoTest {
         Student student = studentDao.queryByStudentId(20230523001L);
         logger.info("student:{}",student);
     }
-
-    @Test
-    public void test_queryList () {
-        List<Student> students = studentDao.queryList();
-        for (Student student : students) {
-            logger.info("student:{}", student);
-        }
-    }
+//
+//    @Test
+//    public void test_queryList () {
+//        List<Student> students = studentDao.queryList();
+//        for (Student student : students) {
+//            logger.info("student:{}", student);
+//        }
+//    }
 }

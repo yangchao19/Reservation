@@ -23,7 +23,7 @@
 
     <update id="updateCurriculum" parameterType="curriculum">
         UPDATE curriculum
-        SET curriculum_name = #{curriculumName}, teacher_id = #{teacherId}, stock = #{stock}, stock_used = #{stockUsed}, begin_time = #{beginTime}, end_time = #{endTime}, info = #{info}
+        SET curriculum_name = #{curriculumName}, teacher_id = #{teacherId}, teacher_name = #{teacherName}, stock = #{stock}, stock_used = #{stockUsed}, begin_time = #{beginTime}, end_time = #{endTime}, info = #{info}
         WHERE curriculum_id = #{curriculumId}
     </update>
     <update id="subtractionCurriculumStock" parameterType="long">
@@ -38,15 +38,23 @@
     </delete>
 
     <select id="queryList" parameterType="date" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
-        SELECT curriculum_id, curriculum_name, teacher_id, stock, stock_used, begin_time, end_time, info
+        SELECT curriculum_id, curriculum_name, teacher_id, teacher_name, stock, stock_used, begin_time, end_time, info
         FROM curriculum
-        WHERE end_time > now() AND #{end} > end_time
+        <where>
+            <if test="name != null and name != '' ">
+                curriculum_name LIKE #{curriculumName}
+            </if>
+        </where>
+        LIMIT #{page}, #{pageSize}
     </select>
 
 
     <select id="queryCurriculumById"  parameterType="long" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
-        SELECT curriculum_id, curriculum_name, teacher_id, stock, stock_used, begin_time, end_time, info
+        SELECT curriculum_id, curriculum_name, teacher_id,teacher_name, stock, stock_used, begin_time, end_time, info
         FROM curriculum
         WHERE curriculum_id = #{curriculumId}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM curriculum
     </select>
 </mapper>

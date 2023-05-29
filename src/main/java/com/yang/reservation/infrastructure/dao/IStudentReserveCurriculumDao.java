@@ -21,7 +21,7 @@ public interface IStudentReserveCurriculumDao {
 
     /**
      * 根据学生id查询已预约课程
-     * @param studentId 学生ud
+     * @param studentId 学生ud 
      * @return 预约课程信息
      */
     List<StudentReserveCurriculum> queryListByStudentId (Long studentId);
