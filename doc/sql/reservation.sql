@@ -92,13 +92,24 @@ COMMIT;
 
 
 -- ----------------------------
--- Table structure for student_reserve_curriculum
+-- Table structure for order
 -- ----------------------------
-DROP TABLE IF EXISTS `student_reserve_curriculum`;
-CREATE TABLE `student_reserve_curriculum`(
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order`(
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+    `order_id` BIGINT(20) NOT NULL COMMENT '订单ID',
     `student_id` BIGINT(20) NOT NULL COMMENT '学生ID',
     `curriculum_id` BIGINT(20) NOT NULL COMMENT '课程ID',
     `teacher_id` BIGINT(20) NOT NULL COMMENT '教师ID',
+    `status` INT DEFAULT 0 COMMENT '订单状态',
+    `date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '下单时间',
+    `money` INT DEFAULT 0 COMMENT '实付金额',
     PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='学生预约课程配置';
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='课程预约订单配置';
+
+-- ----------------------------
+-- Records of order
+-- ----------------------------
+BEGIN;
+INSERT INTO `order` VALUES (1,'1000001','100001','10008','321217272',0,NOW(),90);
+COMMIT

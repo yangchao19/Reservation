@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.reservation.infrastructure.dao.IOrderDao">
+
+    <resultMap id="order" type="com.yang.reservation.infrastructure.po.Order">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="student_id" property="studentId"/>
+        <result column="curriculum_id" property="curriculumId"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="date" property="date"/>
+        <result column="money" property="money"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="order">
+        INSERT INTO `order`
+        (order_id, student_id, curriculum_id, teacher_id, date, money)
+        VALUES
+        (#{orderId}, #{studentId}, #{curriculumId}, #{teacherId}, now(), #{money})
+    </insert>
+    <delete id="deleteByCurriculumId" parameterType="long">
+        DELETE FROM `order`
+        WHERE curriculum_id = #{curriculumId}
+    </delete>
+    <delete id="deleteByStudentId" parameterType="long">
+        DELETE FROM `order`
+        WHERE student_id = #{studentId}
+    </delete>
+    <select id="queryListByStudentId"
+            parameterType="long"
+            resultType="com.yang.reservation.infrastructure.po.Order"
+            resultMap="order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        WHERE student_id = #{studentId}
+    </select>
+    <select id="query" resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        WHERE student_id = #{studentId} AND curriculum_id = #{curriculumId}
+    </select>
+    <select id="queryByStartAndEndTime" resultType="com.yang.reservation.infrastructure.po.Order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        WHERE date BETWEEN #{startTime} AND #{endTime}
+    </select>
+    <select id="queryByOrderId" parameterType="long" resultType="com.yang.reservation.infrastructure.po.Order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        WHERE order_id = #{orderId}
+    </select>
+    <select id="queryList" resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        <where>
+            <if test="orderId != -1">
+                order_id = #{orderId}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                `date` &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=  ''">
+                `date` &lt;= #{endTime}
+            </if>
+        </where>
+        LIMIT #{page}, #{pageSize}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM `order`
+        <where>
+            <if test="orderId != -1">
+                order_id = #{orderId}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                `date` - #{beginTime} > 0
+            </if>
+            <if test="endTime != null and endTime !=  ''">
+                #{endTime} - `date` > 0
+            </if>
+        </where>
+    </select>
+</mapper>

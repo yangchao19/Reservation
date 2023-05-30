@@ -1,8 +1,8 @@
 package com.yang.reservation.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.yang.reservation.infrastructure.dao.IStudentReserveCurriculumDao;
-import com.yang.reservation.infrastructure.po.StudentReserveCurriculum;
+import com.yang.reservation.infrastructure.dao.IOrderDao;
+import com.yang.reservation.infrastructure.po.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,16 +21,16 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StudentReserveCurriculumDaoTest {
+public class OrderDaoTest {
 
-    private Logger logger = LoggerFactory.getLogger(StudentReserveCurriculumDaoTest.class);
+    private Logger logger = LoggerFactory.getLogger(OrderDaoTest.class);
 
     @Resource
-    private IStudentReserveCurriculumDao studentReserveCurriculumDao;
+    private IOrderDao studentReserveCurriculumDao;
 
     @Test
     public void test_insert () {
-        StudentReserveCurriculum src = new StudentReserveCurriculum();
+        Order src = new Order();
         src.setStudentId(20230523001L);
         src.setCurriculumId(100007L);
         src.setTeacherId(100001L);
@@ -39,16 +39,16 @@ public class StudentReserveCurriculumDaoTest {
 
     @Test
     public void test_queryById () {
-        List<StudentReserveCurriculum> src = studentReserveCurriculumDao.queryListByStudentId(20230523001L);
+        List<Order> src = studentReserveCurriculumDao.queryListByStudentId(20230523001L);
         logger.info("学生预约课程信息：{}", JSON.toJSONString(src));
     }
 
     @Test
     public void test_query () {
-        StudentReserveCurriculum src = new StudentReserveCurriculum();
+        Order src = new Order();
         src.setStudentId(20230523001L);
         src.setCurriculumId(100007L);
-        StudentReserveCurriculum query = studentReserveCurriculumDao.query(src);
+        Order query = studentReserveCurriculumDao.query(src);
         if (query != null) {
             logger.info("已经预约过该课程，不能重复预约");
         }else {
