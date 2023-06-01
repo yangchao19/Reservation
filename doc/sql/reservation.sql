@@ -111,5 +111,5 @@ CREATE TABLE `order`(
 -- Records of order
 -- ----------------------------
 BEGIN;
-INSERT INTO `order` VALUES (1,'1000001','100001','10008','321217272',0,NOW(),90);
+INSERT INTO `order` VALUES (1,'1000001','100001','10008','100001',0,NOW(),90);
 COMMIT

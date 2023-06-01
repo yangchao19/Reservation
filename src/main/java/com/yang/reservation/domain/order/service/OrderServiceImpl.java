@@ -7,8 +7,10 @@ import com.yang.reservation.infrastructure.dao.ICurriculumDao;
 import com.yang.reservation.infrastructure.dao.IOrderDao;
 import com.yang.reservation.infrastructure.dao.IStudentDao;
 import com.yang.reservation.infrastructure.dao.ITeacherDao;
+import com.yang.reservation.infrastructure.po.Curriculum;
 import com.yang.reservation.infrastructure.po.Order;
 import com.yang.reservation.infrastructure.po.Student;
+import com.yang.reservation.infrastructure.po.Teacher;
 import org.springframework.beans.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +65,15 @@ public class OrderServiceImpl implements IOrderService {
                 Student student = studentDao.queryByStudentId(orderVO.getStudentId());
                 orderVO.setStudentName(student.getStudentName());
                 orderVO.setPhone(student.getPhone());
-                orderVO.setCurriculumName(curriculumDao.queryCurriculumById(orderVO.getCurriculumId()).getCurriculumName());
-                orderVO.setTeacherName(teacherDao.queryTeacherById(orderVO.getTeacherId()).getTeacherName());
+
+                Curriculum curriculum = curriculumDao.queryCurriculumById(orderVO.getCurriculumId());
+                orderVO.setCurriculumName(curriculum.getCurriculumName());
+
+                Teacher teacher = teacherDao.queryTeacherById(orderVO.getTeacherId());
+                logger.info("orderVO:{},curriculum:{}, teacher:{}",orderVO,curriculum,teacher);
+                orderVO.setTeacherName(teacher.getTeacherName());
+
+
                 orderVOList.add(orderVO);
             }
         }else {
