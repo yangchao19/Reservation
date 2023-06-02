@@ -5,6 +5,8 @@ import com.yang.reservation.common.Page;
 import com.yang.reservation.common.Return;
 import com.yang.reservation.infrastructure.dao.IStudentDao;
 import com.yang.reservation.infrastructure.po.Student;
+import com.yang.reservation.util.SMSUtils;
+import com.yang.reservation.util.ValidateCodeUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,5 +56,14 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public void add(Student student) {
         studentDao.insert(student);
+    }
+
+    @Override
+    public String sendMsg(String phone) throws Exception {
+
+        //1. 生成验证码
+        String code = ValidateCodeUtils.generateValidateCode(6).toString();
+        SMSUtils.sendMsg(phone,code);
+        return code;
     }
 }

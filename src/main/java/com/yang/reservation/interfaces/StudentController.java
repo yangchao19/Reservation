@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -64,5 +65,23 @@ public class StudentController {
     public Return<String> add (@RequestBody Student student) {
         studentService.add(student);
         return Return.success("新增成功");
+    }
+
+    /**
+     * 发送手机验证码，并验证
+     * @param student
+     * @return
+     */
+    @PostMapping("/sendMsg")
+    public Return<String> sendMsg (HttpSession session, @RequestBody Student student) throws Exception {
+        logger.info("student:{}",student);
+        String phone = student.getPhone();
+        if (null !=phone) {
+            String code = studentService.sendMsg(phone);
+            session.setAttribute(phone,code);
+            logger.info("phone:{},code:{}",phone,code);
+            return Return.success("发送验证码成功");
+        }
+        return Return.error("出错啦");
     }
 }

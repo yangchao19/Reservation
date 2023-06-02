@@ -1,14 +1,22 @@
 function loginApi(data) {
     return $axios({
-      'url': '/user/login',
+      'url': '/student/login',
       'method': 'post',
       data
     })
   }
 
-function loginoutApi() {
+function sendMsgApi(data) {
+    return $axios({
+        'url':'/student/sendMsg',
+        'method':'post',
+        data
+    })
+}
+
+function loginOutApi() {
   return $axios({
-    'url': '/user/loginout',
+    'url': '/student/loginout',
     'method': 'post',
   })
 }

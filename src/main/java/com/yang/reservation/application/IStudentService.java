@@ -47,4 +47,11 @@ public interface IStudentService {
      * @param student
      */
     void add (Student student);
+
+    /**
+     * 发送手机验证码
+     * @param phone
+     * @return 发送给手机的验证码
+     */
+    String sendMsg(String phone) throws Exception;
 }

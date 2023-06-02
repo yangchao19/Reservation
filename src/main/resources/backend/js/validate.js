@@ -9,6 +9,7 @@ function isExternal (path) {
 
 function isCellPhone (val) {
   if (!/^1(3[0-9]|4[5-79]|5[0-35-9]|6[2567]|7[013-8]|8[0-9]|9[189])\d{8}$/.test(val)) {
+    
     return false
   } else {
     return true

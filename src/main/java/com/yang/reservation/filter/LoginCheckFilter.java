@@ -1,6 +1,7 @@
 package com.yang.reservation.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.yang.reservation.common.BaseContext;
 import com.yang.reservation.common.Return;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,9 @@ public class LoginCheckFilter implements Filter {
                 "/teacher/login",
                 "/teacher/logout",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/student/sendMsg",
+                "/student/login"
         };
 
         //2. 判断本次请求是否需要处理
@@ -52,12 +55,28 @@ public class LoginCheckFilter implements Filter {
             return;
         }
 
-        //4. 判断登录状态，如果已登录，则直接放行
+        //4.1 判断后台教师登录状态，如果已登录，则直接放行
         if (null != request.getSession().getAttribute("teacher")) {
             logger.info("用户已登录");
+
+            Long teacherId = (Long)request.getSession().getAttribute("teacher");
+            BaseContext.setCurrentId(teacherId);
+
             filterChain.doFilter(request,response);
             return;
         }
+
+        //4.2 判断前台学生登录状态，如果已登录，则直接放行
+        if (null != request.getSession().getAttribute("student")) {
+            logger.info("用户已登录");
+
+            Long studentId = (Long)request.getSession().getAttribute("student");
+            BaseContext.setCurrentId(studentId);
+
+            filterChain.doFilter(request,response);
+            return;
+        }
+
         //5. 如果未登陆则返回未登录结果,通过输出流的方式向客户端页面响应数据
         //"NOTLOGIN" 要与request.js中的响应拦截器的msg一致
         logger.info("用户未登录，需要先登录");
