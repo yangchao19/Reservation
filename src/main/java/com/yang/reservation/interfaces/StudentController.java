@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -77,11 +78,38 @@ public class StudentController {
         logger.info("student:{}",student);
         String phone = student.getPhone();
         if (null !=phone) {
-            String code = studentService.sendMsg(phone);
+            //实际发送验证码
+            //String code = studentService.sendMsg(phone);
+
+            //测试使用
+            String code = "1234";
             session.setAttribute(phone,code);
             logger.info("phone:{},code:{}",phone,code);
             return Return.success("发送验证码成功");
         }
         return Return.error("出错啦");
+    }
+
+    @PostMapping("/login")
+    public Return<Student> login (@RequestBody Map map,HttpSession session) {
+        String phone = map.get("phone").toString();
+        String code = map.get("code").toString();
+
+        //1. 获取session中发送给用户的验证码
+        Object codeInSession = session.getAttribute(phone);
+
+        logger.info("登录信息 phone:{},code:{},codeInSession:{}",phone,code,codeInSession);
+
+
+        //2. 检验验证码是否与发送的验证匹配
+        if (null != codeInSession && codeInSession.equals(code)) {
+            Student student = studentService.checkAndInit(phone);
+
+            //将用户id存入session中，标识用户已登录
+            session.setAttribute("student",student.getStudentId());
+            logger.info("登录成功studentId:{}",student.getStudentId());
+            return Return.success(student);
+        }
+        return Return.error("验证码错误");
     }
 }

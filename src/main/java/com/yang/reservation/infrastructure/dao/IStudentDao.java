@@ -41,6 +41,13 @@ public interface IStudentDao {
     Student queryByStudentId (Long studentId);
 
     /**
+     * 根据手机号查询学生信息
+     * @param phone
+     * @return
+     */
+    Student queryByPhone (String phone);
+
+    /**
      * 查询总数
      * @return
      */

@@ -3,11 +3,13 @@ package com.yang.reservation.domain.student.service;
 import com.yang.reservation.application.IStudentService;
 import com.yang.reservation.common.Page;
 import com.yang.reservation.common.Return;
+import com.yang.reservation.domain.support.id.IIdGenerator;
 import com.yang.reservation.infrastructure.dao.IStudentDao;
 import com.yang.reservation.infrastructure.po.Student;
 import com.yang.reservation.util.SMSUtils;
 import com.yang.reservation.util.ValidateCodeUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.IdGenerator;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +25,9 @@ public class StudentServiceImpl implements IStudentService {
 
     @Resource
     private IStudentDao studentDao;
+
+    @Resource(name = "snowflake")
+    private IIdGenerator idGenerator;
 
     @Override
     public int count() {
@@ -65,5 +70,22 @@ public class StudentServiceImpl implements IStudentService {
         String code = ValidateCodeUtils.generateValidateCode(6).toString();
         SMSUtils.sendMsg(phone,code);
         return code;
+    }
+
+    @Override
+    public Student checkAndInit(String phone) {
+
+        Student student = studentDao.queryByPhone(phone);
+
+        if (student != null) {
+            return student;
+        }
+
+        Student student1 = new Student();
+        long id = idGenerator.nextId();
+        student1.setStudentId(id);
+        student1.setPhone(phone);
+        studentDao.insert(student1);
+        return student1;
     }
 }

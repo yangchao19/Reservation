@@ -2,6 +2,7 @@ package com.yang.reservation.application;
 
 import com.yang.reservation.common.Page;
 import com.yang.reservation.common.Return;
+import com.yang.reservation.infrastructure.dao.IStudentDao;
 import com.yang.reservation.infrastructure.po.Student;
 
 import java.util.List;
@@ -49,9 +50,18 @@ public interface IStudentService {
     void add (Student student);
 
     /**
-     * 发送手机验证码
+     * 发送短息验证码
      * @param phone
-     * @return 发送给手机的验证码
+     * @return
+     * @throws Exception
      */
     String sendMsg(String phone) throws Exception;
+
+
+    /**
+     * 检查并初始化
+     * @return 学生信息
+     * @param phone
+     */
+    Student checkAndInit (String phone);
 }

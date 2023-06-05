@@ -31,9 +31,9 @@
         </div>
         <div class="divContent">
             <div class="divLinks">
-                <div class="item" @click="toAddressPage">
+                <div class="item" @click="toInfoPage">
                     <img src="./../images/locations.png"/>
-                    <span>地址管理</span>
+                    <span>个人信息</span>
                     <i class="el-icon-arrow-right"></i>
                 </div>
                 <div class="divSplit"></div>
@@ -106,7 +106,8 @@
             },
             computed:{},
             created(){
-                this.userPhone =sessionStorage.getItem("userPhone")
+                this.userPhone = JSON.parse(sessionStorage.getItem("userinfo")).phone
+                this.userId = JSON.parse(sessionStorage.getItem("userinfo")).studentId
                 this.initData()
             },
             mounted(){},
@@ -116,8 +117,13 @@
                 },
                 toAddressPage(){
                     window.requestAnimationFrame(()=>{
-                        window.location.href = '/front/page/address.html'
+                        window.location.href = '/front/page/address-edit.html'
                     })  
+                },
+                toInfoPage(item){
+                    window.requestAnimationFrame(()=>{
+                        window.location.href = `/front/page/address-edit.html?id=${this.userId}`
+                    })
                 },
                 toOrderPage(){
                     window.requestAnimationFrame(()=>{

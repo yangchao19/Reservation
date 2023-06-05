@@ -57,7 +57,7 @@ public class LoginCheckFilter implements Filter {
 
         //4.1 判断后台教师登录状态，如果已登录，则直接放行
         if (null != request.getSession().getAttribute("teacher")) {
-            logger.info("用户已登录");
+            logger.info("教师已登录");
 
             Long teacherId = (Long)request.getSession().getAttribute("teacher");
             BaseContext.setCurrentId(teacherId);
@@ -68,7 +68,7 @@ public class LoginCheckFilter implements Filter {
 
         //4.2 判断前台学生登录状态，如果已登录，则直接放行
         if (null != request.getSession().getAttribute("student")) {
-            logger.info("用户已登录");
+            logger.info("学生已登录");
 
             Long studentId = (Long)request.getSession().getAttribute("student");
             BaseContext.setCurrentId(studentId);
