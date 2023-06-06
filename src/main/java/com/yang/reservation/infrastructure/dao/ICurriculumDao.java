@@ -62,4 +62,18 @@ public interface ICurriculumDao {
      * @return 扣减结果
      */
     int subtractionCurriculumStock(Long curriculumId);
+
+    /**
+     * 查询现有课程的科目
+     * @return
+     */
+    List<Integer> querySubjectList();
+
+    /**
+     * 根据科目查询课程信息
+     * @param subject
+     * @param status
+     * @return
+     */
+    List<Curriculum> queryListBySubject(@Param("subject") int subject, @Param("status") int status);
 }

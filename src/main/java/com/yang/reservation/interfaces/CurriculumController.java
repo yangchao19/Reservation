@@ -4,6 +4,7 @@ import com.yang.reservation.application.ICurriculumService;
 import com.yang.reservation.application.ITeacherService;
 import com.yang.reservation.common.Page;
 import com.yang.reservation.common.Return;
+import com.yang.reservation.domain.curriculum.model.SubjectVO;
 import com.yang.reservation.infrastructure.dao.ITeacherDao;
 import com.yang.reservation.infrastructure.po.Curriculum;
 import com.yang.reservation.infrastructure.po.Teacher;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.attribute.UserPrincipalLookupService;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -135,5 +138,19 @@ public class CurriculumController {
             return Return.error("教师姓名填写错误");
         }
 
+    }
+
+    @GetMapping("/subjectList")
+    public Return<List<SubjectVO>> querySubject() {
+        List<SubjectVO> subjectVOS = curriculumService.querySubject();
+        return Return.success(subjectVOS);
+    }
+
+    @GetMapping("/list")
+    public Return<List<Curriculum>> queryListBySubject(@RequestParam("subjectId") int subject, @RequestParam("status") int status) {
+
+        logger.info("subject:{},status:{}",subject,status);
+        List<Curriculum> list = curriculumService.queryListBySubject(subject, status);
+        return Return.success(list);
     }
 }

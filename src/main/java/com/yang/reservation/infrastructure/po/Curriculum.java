@@ -35,6 +35,11 @@ public class Curriculum {
     private String teacherName;
 
     /**
+     * 学科科目
+     */
+    private int subject;
+
+    /**
      * 价格
      */
     private int price;
@@ -58,6 +63,11 @@ public class Curriculum {
      * 课程结束时间
      */
     private Date endTime;
+
+    /**
+     * 课程状态 0：代表不能预约 1：代表可预约
+     */
+    private int status;
 
     /**
      * 课程备注信息
@@ -104,6 +114,14 @@ public class Curriculum {
         this.teacherName = teacherName;
     }
 
+    public int getSubject() {
+        return subject;
+    }
+
+    public void setSubject(int subject) {
+        this.subject = subject;
+    }
+
     public int getPrice() {
         return price;
     }
@@ -148,6 +166,14 @@ public class Curriculum {
         return info;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public void setInfo(String info) {
         this.info = info;
     }
@@ -160,11 +186,13 @@ public class Curriculum {
                 ", curriculumName='" + curriculumName + '\'' +
                 ", teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
+                ", subject=" + subject +
                 ", price=" + price +
                 ", stock=" + stock +
                 ", stockUsed=" + stockUsed +
                 ", beginTime=" + beginTime +
                 ", endTime=" + endTime +
+                ", status=" + status +
                 ", info='" + info + '\'' +
                 '}';
     }

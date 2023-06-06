@@ -5,6 +5,7 @@ import com.yang.reservation.domain.order.model.OrderVO;
 import com.yang.reservation.infrastructure.po.Order;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description:
@@ -24,4 +25,6 @@ public interface IOrderService {
      * @return
      */
     Page<OrderVO> queryList (long page, long pageSize, String orderId, Date beginTime, Date endTime);
+
+    List<OrderVO> queryListById(long studentId);
 }

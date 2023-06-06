@@ -71,11 +71,13 @@ CREATE TABLE `curriculum`(
     `curriculum_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '课程名称',
     `teacher_id` BIGINT(20) NOT NULL COMMENT '教师ID',
     `teacher_name` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '教师姓名',
+    `subject` INT DEFAULT 0 COMMENT '课程类型',
     `price` INT DEFAULT 0 COMMENT '价格',
     `stock` INT NOT NULL COMMENT '课程可预约总数',
     `stock_used` INT NOT NULL COMMENT '课程已预约数',
     `begin_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '课程开始时间',
     `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '课程结束时间',
+    `status` INT NOT NULL DEFAULT 0 COMMENT '课程状态，0为不可预约 1代表可预约',
     `info` VARCHAR(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '课程备注信息',
     PRIMARY KEY (`id`),
     UNIQUE KEY `unique_curriculum_id`(`curriculum_id`)
@@ -87,7 +89,15 @@ CREATE TABLE `curriculum`(
 -- Records of curriculum
 -- ----------------------------
 BEGIN;
-INSERT INTO `curriculum` VALUES (1, '10008','测试课程', '100001', 'admin',80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', '课程备注信息');
+INSERT INTO `curriculum` VALUES (1, '10008','测试课程1', '100001', 'admin',0,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (2, '10009','测试课程2', '100001', 'admin',2,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (3, '10010','测试课程3', '100001', 'admin',5,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (4, '10011','测试课程4', '100001', 'admin',2,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (5, '10012','测试课程5', '100001', 'admin',1,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (6, '10013','测试课程6', '100001', 'admin',4,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (7, '10014','测试课程7', '100001', 'admin',10,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (8, '10015','测试课程8', '100001', 'admin',1,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
+INSERT INTO `curriculum` VALUES (9, '10016','测试课程9', '100001', 'admin',8,80, 100, 3, '2023-05-07 08:00:00', '2023-05-07 11:00:00', 1,'课程备注信息');
 COMMIT;
 
 

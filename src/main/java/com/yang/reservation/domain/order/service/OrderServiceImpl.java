@@ -60,20 +60,7 @@ public class OrderServiceImpl implements IOrderService {
 
         if (null != orderList) {
             for (Order order : orderList) {
-                OrderVO orderVO = new OrderVO();
-                BeanUtils.copyProperties(order,orderVO);
-                Student student = studentDao.queryByStudentId(orderVO.getStudentId());
-                orderVO.setStudentName(student.getStudentName());
-                orderVO.setPhone(student.getPhone());
-
-                Curriculum curriculum = curriculumDao.queryCurriculumById(orderVO.getCurriculumId());
-                orderVO.setCurriculumName(curriculum.getCurriculumName());
-
-                Teacher teacher = teacherDao.queryTeacherById(orderVO.getTeacherId());
-                logger.info("orderVO:{},curriculum:{}, teacher:{}",orderVO,curriculum,teacher);
-                orderVO.setTeacherName(teacher.getTeacherName());
-
-
+                OrderVO orderVO = orderToVO(order);
                 orderVOList.add(orderVO);
             }
         }else {
@@ -90,5 +77,38 @@ public class OrderServiceImpl implements IOrderService {
         orderVOPage.setTotal(count);
         orderVOPage.setRecords(orderVOList);
         return orderVOPage;
+    }
+
+    @Override
+    public List<OrderVO> queryListById(long studentId) {
+        List<Order> orderList = orderDao.queryListByStudentId(studentId);
+
+
+        if (null != orderList) {
+            ArrayList<OrderVO> orderVOList = new ArrayList<>();
+            for (Order order : orderList) {
+                OrderVO orderVO = orderToVO(order);
+                orderVOList.add(orderVO);
+            }
+            return orderVOList;
+        }
+        return null;
+    }
+
+    private OrderVO orderToVO(Order order) {
+        OrderVO orderVO = new OrderVO();
+
+        BeanUtils.copyProperties(order, orderVO);
+
+        Student student = studentDao.queryByStudentId(orderVO.getStudentId());
+        orderVO.setStudentName(student.getStudentName());
+        orderVO.setPhone(student.getPhone());
+
+        Curriculum curriculum = curriculumDao.queryCurriculumById(orderVO.getCurriculumId());
+        orderVO.setCurriculumName(curriculum.getCurriculumName());
+
+        Teacher teacher = teacherDao.queryTeacherById(orderVO.getTeacherId());
+        orderVO.setTeacherName(teacher.getTeacherName());
+        return orderVO;
     }
 }

@@ -2,6 +2,8 @@ package com.yang.reservation.domain.curriculum.service;
 
 import com.yang.reservation.application.ICurriculumService;
 import com.yang.reservation.common.Page;
+import com.yang.reservation.common.Subject;
+import com.yang.reservation.domain.curriculum.model.SubjectVO;
 import com.yang.reservation.domain.support.id.IIdGenerator;
 import com.yang.reservation.infrastructure.dao.ICurriculumDao;
 import com.yang.reservation.infrastructure.dao.ITeacherDao;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,5 +91,28 @@ public class CurriculumServiceImpl implements ICurriculumService {
         //3.新增课程信息
         curriculumDao.insertCurriculum(curriculum);
         logger.info("新增课程信息");
+    }
+
+    @Override
+    public List<SubjectVO> querySubject() {
+        List<Integer> integerList = curriculumDao.querySubjectList();
+        ArrayList<SubjectVO> subjectList = new ArrayList<>();
+
+        if (null == integerList) {
+            return null;
+        }
+
+        for (Integer i : integerList) {
+            SubjectVO subjectVO = new SubjectVO();
+            subjectVO.setId(i);
+            subjectVO.setName(Subject.getSubject(i));
+            subjectList.add(subjectVO);
+        }
+        return subjectList;
+    }
+
+    @Override
+    public List<Curriculum> queryListBySubject(int subject, int status) {
+        return curriculumDao.queryListBySubject(subject,status);
     }
 }

@@ -18,7 +18,7 @@ function orderListApi() {
 //分页查询订单
 function orderPagingApi(data) {
   return $axios({
-      'url': '/order/userPage',
+      'url': '/order/page',
       'method': 'get',
       params:{...data}
   })

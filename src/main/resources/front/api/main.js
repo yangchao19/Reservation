@@ -1,15 +1,22 @@
 //获取所有的菜品分类
-function categoryListApi() {
+function subjectListApi() {
     return $axios({
-      'url': '/category/list',
+      'url': '/curriculum/subjectList',
       'method': 'get',
     })
   }
+function curriculumListApi(data) {
+    return $axios({
+        'url':`/curriculum/list`,
+        'method':'get',
+        params:{...data}
+    })
+}
 
 //获取菜品分类对应的菜品
 function dishListApi(data) {
     return $axios({
-        'url': '/dish/list',
+        'url': '/curriculum/list',
         'method': 'get',
         params:{...data}
     })
@@ -18,7 +25,7 @@ function dishListApi(data) {
 //获取菜品分类对应的套餐
 function setmealListApi(data) {
     return $axios({
-        'url': '/setmeal/list',
+        'url': '/curriculum/list',
         'method': 'get',
         params:{...data}
     })
@@ -27,7 +34,7 @@ function setmealListApi(data) {
 //获取购物车内商品的集合
 function cartListApi(data) {
     return $axios({
-        'url': '/shoppingCart/list',
+        'url': '/order/oneList',
         'method': 'get',
         params:{...data}
     })
@@ -66,5 +73,16 @@ function setMealDishDetailsApi(id) {
         'method': 'get',
     })
 }
+
+
+
+//获取当前学生已预约的课程订单
+function orderListApi(studentId) {
+    return $axios({
+        'url':`/order/${studentId}`,
+        'method':'get',
+    })
+}
+
 
 

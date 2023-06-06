@@ -1,6 +1,7 @@
 package com.yang.reservation.application;
 
 import com.yang.reservation.common.Page;
+import com.yang.reservation.domain.curriculum.model.SubjectVO;
 import com.yang.reservation.infrastructure.po.Curriculum;
 
 import java.util.List;
@@ -41,4 +42,12 @@ public interface ICurriculumService {
      * @param curriculum
      */
     void add(Curriculum curriculum);
+
+    /**
+     * 查询现有的课程类型
+     * @return
+     */
+    List<SubjectVO> querySubject();
+
+    List<Curriculum> queryListBySubject(int subject,int status);
 }

@@ -8,11 +8,13 @@
         <result column="curriculum_name" property="curriculumName"/>
         <result column="teacher_id" property="teacherId"/>
         <result column="teacher_name" property="teacherName"/>
+        <result column="subject" property="subject"/>
         <result column="price" property="price"/>
         <result column="stock" property="stock"/>
         <result column="stock_used" property="stockUsed"/>
         <result column="begin_time" property="beginTime"/>
         <result column="end_time" property="endTime"/>
+        <result column="status" property="status"/>
         <result column="info" property="info"/>
     </resultMap>
 
@@ -40,7 +42,7 @@
     </delete>
 
     <select id="queryList" parameterType="date" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
-        SELECT curriculum_id, curriculum_name, teacher_id, teacher_name, price, stock, stock_used, begin_time, end_time, info
+        SELECT curriculum_id, curriculum_name, teacher_id, teacher_name,subject, price, stock, stock_used, begin_time, end_time, info
         FROM curriculum
         <where>
             <if test="curriculumName != null and curriculumName != '' ">
@@ -58,5 +60,15 @@
     </select>
     <select id="count" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM curriculum
+    </select>
+    <select id="querySubjectList" resultType="java.lang.Integer">
+        SELECT DISTINCT subject
+        FROM curriculum
+        ORDER BY subject ASC
+    </select>
+    <select id="queryListBySubject" resultType="com.yang.reservation.infrastructure.po.Curriculum" resultMap="curriculum">
+        SELECT curriculum_id, curriculum_name, teacher_id,teacher_name,subject, price, stock, stock_used, begin_time, end_time, status,info
+        FROM curriculum
+        WHERE subject = #{subject} AND status = #{status}
     </select>
 </mapper>
