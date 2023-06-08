@@ -13,6 +13,14 @@ function curriculumListApi(data) {
     })
 }
 
+function addOrderApi(curriculumId) {
+    return $axios({
+        'url':'/order',
+        'method':'put',
+        params:{...curriculumId}
+    })
+}
+
 //获取菜品分类对应的菜品
 function dishListApi(data) {
     return $axios({

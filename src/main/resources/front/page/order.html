@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no,minimal-ui">
-        <title>菩提阁</title>
+        <title>课程预约</title>
         <link rel="icon" href="./../images/favico.ico">
         <!--不同屏幕尺寸根字体设置-->
         <script src="./../js/base.js"></script>
@@ -21,9 +21,10 @@
         <div id="order" class="app">
             <div class="divHead">
                 <div class="divTitle">
-                    <i class="el-icon-arrow-left" @click="goBack"></i>菩提阁
+                    <i class="el-icon-arrow-left" @click="goBack"></i>历史预约
                 </div>
             </div>
+
             <div class="divBody" v-if="orderList.length > 0">
                 <van-list
                     v-model="loading"
@@ -31,24 +32,10 @@
                     finished-text="没有更多了"
                     @load="getList"
                     >
-                    <van-cell v-for="(order,index) in orderList" :key="index" class="item">
-                        <div class="timeStatus">
-                            <span>{{order.orderTime}}</span>
-                            <span>{{getStatus(order.status)}}</span>
-                            <!-- <span>正在派送</span> -->
-                        </div>
-                        <div class="dishList">
-                            <div v-for="(item,index) in order.orderDetails" :key="index" class="item">
-                                <span>{{item.name}}</span>
-                                <span>x{{item.number}}</span>
-                            </div>
-                        </div>
-                        <div class="result">
-                            <span>共{{order.sumNum}} 件商品,实付</span><span class="price">￥{{order.amount}}</span>
-                        </div>
-                        <div class="btn" v-if="order.status === 4">
-                            <div class="btnAgain" @click="addOrderAgain(order)">再来一单</div>
-                        </div>
+                    <van-cell v-for="(item,index) in orderList" :key="index" class="item" @click="orderDetails(item)">
+                        <div class="divName">{{item.curriculumName}}</div>
+                        <button class="quit-btn" @click="toQuit(item,$event)">取消预约</button>
+                        <div class="divName">{{item.teacherName}}</div>
                     </van-cell>
                 </van-list>
             </div>
@@ -59,6 +46,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- 查看弹框部分 -->
+        <el-dialog
+                title="订单详情"
+                :visible.sync="detailsDialogVisible"
+                width="70%"
+                :before-close="handleClose"
+        >
+            <div class="info-box">
+                <div class="item-box">
+                    <span class="label">课程名称：</span>
+                    <span class="des">{{ details.curriculumName}}</span>
+                </div>
+                <div class="item-box">
+                    <span class="label">教师：</span>
+                    <span class="des">{{ details.teacherName }}</span>
+                </div>
+
+                <div class="item-box">
+                    <span class="label">已预约人数：</span>
+                    <span class="des">{{ details.stockUsed }}</span>
+                </div>
+                <div class="item-box">
+                    <span class="label">总人数：</span>
+                    <span class="des">{{ details.stock }}</span>
+                </div>
+                <div class="item-box">
+                    <span class="label">价格：</span>
+                    <span class="des">{{ details.price }}</span>
+                </div>
+            </div>
+        </el-dialog>
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
         <script src="../../backend/plugins/vue/vue.js"></script>
         <!-- 引入组件库 -->
@@ -79,6 +98,15 @@
                         pageSize:5
                     },
                     orderList:[],
+                    Details:{
+                        beginTime:'',
+                        endTime:'',
+                        price:1,
+                        stock:1,
+                        stockUsed:1,
+                        info:''
+                    },
+                    detailsDialogVisible:false,
                     loading:false,
                     finished:false
                 }
@@ -111,56 +139,47 @@
                     const res = await orderPagingApi(this.paging)
                     if(res.code === 1){
                         this.orderList.push(...res.data.records)
-                        let records = res.data.records
-                        if(records && Array.isArray(records)){
-                            records.forEach(item=>{
-                                let number = 0
-                                item.orderDetails.forEach(ele=>{
-                                    number += ele.number
-                                })
-                                item.sumNum = number
-                            })
-                        }
                         this.loading = false;
-                        if(this.paging.page >= res.data.pages){
+                        if(res.data.current * res.data.size >= res.data.total){
                             this.finished = true;
                         }
                         this.paging.page = this.paging.page + 1
-                    }else{
-                        this.$notify({ type:'warning', message:res.msg});
-                    }
-                },
-                async addOrderAgain(order){
-                    const res = await orderAgainApi({id:order.id})
-                    if(res.code === 1){
-                        window.requestAnimationFrame(()=>{
-                            window.location.href= '/front/index.html'
-                        })
-                    }else{
-                        this.$notify({ type:'warning', message:res.msg});
-                    }
-                },
-                getStatus(status){
-                    let str = ''
-                    switch(status){
-                        case 1:
-                            str =  '待付款'
-                        break;
-                        case 2:
-                            str =  '正在派送'
-                        break;
-                        case 3:
-                            str =  '已派送'
-                        break;
-                        case 4:
-                            str =  '已完成'
-                        break;
-                        case 5:
-                            str =  '已取消'
-                        break;
 
+                    }else{
+                        this.$notify({ type:'warning', message:res.msg});
                     }
-                    return str
+                },
+                async toQuit(item,event){
+                    event.stopPropagation();
+                    const res = await quitOrderApi({orderId:item.orderId})
+                    if (res.code === 1) {
+                        alert(res.data)
+                        // this.$notify({ type:'success', message:res.msg});
+                    }else {
+                        alert(res.msg)
+                        // this.$notify({ type:'warning', message:res.msg});
+                    }
+                },
+                async orderDetails(item){
+                    this.details = {}
+                    this.detailsDialogVisible = true
+                    const formatTime = (cellValue) => {
+                        const options = {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false
+                        };
+                        const date = new Date(cellValue);
+                        const offset = date.getTimezoneOffset() / 60 + 16;
+                        date.setHours(date.getHours() - offset);
+                        return new Intl.DateTimeFormat('zh-CN', options).format(date);
+                    }
+                    const newDate = formatTime(item.date);
+                    this.details = {...item,date:newDate}
                 }
             }
         })

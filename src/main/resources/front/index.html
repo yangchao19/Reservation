@@ -54,6 +54,7 @@
                 <div class="divDesc">{{'已预约:' + (item.stockUsed)}}   {{'剩余可预约:' + (item.stock - item.stockUsed) }}</div>
                 <div class="divBottom"><span>￥</span><span>{{item.price}}</span></div>
               </div>
+              <button class="reserve-btn" @click="toReserve(item,$event)">预约</button>
             </div>
           </div>
         </div>
@@ -63,6 +64,46 @@
         <div class="divLayerLeft"></div>
         <div class="divLayerRight"></div>
       </div>
+
+      <!-- 查看弹框部分 -->
+      <el-dialog
+              title="课程详情"
+              :visible.sync="detailsDialogVisible"
+              width="70%"
+              :before-close="handleClose"
+      >
+        <div class="info-box">
+          <div class="item-box">
+            <span class="label">课程名称：</span>
+            <span class="des">{{ details.curriculumName}}</span>
+          </div>
+          <div class="item-box">
+            <span class="label">教师：</span>
+            <span class="des">{{ details.teacherName }}</span>
+          </div>
+          <div class="item-box">
+            <span class="label">开始时间：</span>
+            <span class="des">{{ details.beginTime }}</span>
+          </div>
+          <div class="item-box">
+            <span class="label">结束时间：</span>
+            <span class="des">{{ details.endTime }}</span>
+          </div>
+          <div class="item-box">
+            <span class="label">已预约人数：</span>
+            <span class="des">{{ details.stockUsed }}</span>
+          </div>
+          <div class="item-box">
+            <span class="label">总人数：</span>
+            <span class="des">{{ details.stock }}</span>
+          </div>
+          <div class="item-box">
+            <span class="label">价格：</span>
+            <span class="des">{{ details.price }}</span>
+          </div>
+        </div>
+
+      </el-dialog>
 
     </div>
     </div>
@@ -88,16 +129,17 @@
               subjectList:[],
               subjectId:undefined,
               curriculumList:[],
-              cartData:[],
-              cartDialogShow:false,
-              detailsDialog:{
-                show:false,
-                item:{image:''}
-              },
-              setMealDialog:{
-                show:false,
-                item:{}
-              },
+              detailsDialogVisible:false,
+              details:{
+                curriculumName:'',
+                teacherName:'',
+                beginTime:'',
+                endTime:'',
+                price:1,
+                stock:1,
+                stockUsed:1,
+                info:''
+              }
             }
           },
           computed:{
@@ -136,7 +178,7 @@
               this.subjectId = id
               this.getCurriculumList()
             },
-            //获取菜品数据
+            //获取课程数据
             async getCurriculumList(){
               if(this.subjectId < -1){
                 console.log(this.subjectId)
@@ -157,24 +199,44 @@
                 })
               }
             },
+            async toReserve(item,event){
+              event.stopPropagation();
+              const res = await addOrderApi({curriculumId:item.curriculumId})
+              if (res.code === 1) {
+                alert(res.data)
+                // this.$notify({ type:'success', message:res.msg});
+              }else {
+                alert(res.msg)
+                // this.$notify({ type:'warning', message:res.msg});
+              }
+            },
             toUserPage(){
               window.requestAnimationFrame(()=>{
                 window.location.href= '/front/page/user.html'
               })
             },
             async curriculumDetails(item){
-              //先清除对象数据，如果不行的话dialog使用v-if
-              this.detailsDialog.item = {}
-              this.setMealDialog.item = {}
-              if(Array.isArray(item)){
-                this.detailsDialog.item = item
-                this.detailsDialog.show = true
-              }else{
-                  alert("Array.isArray(item) is false")
+              this.details = {}
+              this.detailsDialogVisible = true
+              const formatTime = (cellValue) => {
+                const options = {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                };
+                const date = new Date(cellValue);
+                const offset = date.getTimezoneOffset() / 60 + 16;
+                date.setHours(date.getHours() - offset);
+                return new Intl.DateTimeFormat('zh-CN', options).format(date);
               }
-
+              const newBeginTime = formatTime(item.beginTime);
+              const newEndTime = formatTime(item.endTime);
+              this.details = {...item,beginTime: newBeginTime,endTime: newEndTime}
             }
-
           }
       })
   </script>

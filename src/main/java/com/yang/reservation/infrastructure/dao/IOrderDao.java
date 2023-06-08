@@ -43,6 +43,14 @@ public interface IOrderDao {
     Order queryByOrderId(long orderId);
 
     /**
+     * 根据学生id和课程id查找预约信息
+     * @param studentId
+     * @param curriculumId
+     * @return
+     */
+    Order queryByCurriculumId(@Param("studentId") long studentId,@Param("curriculumId") long curriculumId);
+
+    /**
      * 根据开始和截至时间查询订单
      * @param startTime
      * @param endTime
@@ -60,6 +68,8 @@ public interface IOrderDao {
      * @return 订单信息
      */
     List<Order> queryList (@Param("page") long page, @Param("pageSize") long pageSize, @Param("orderId") long orderId, @Param("beginTime") Date beginTime, @Param("endTime") Date endTime);
+
+    List<Order> queryPageListByStudentId (@Param("page") long page, @Param("pageSize") long pageSize, @Param("studentId") long studentId);
 
     /**
      * 根据课程id删除学生预约课程信息
@@ -82,4 +92,20 @@ public interface IOrderDao {
      * @return
      */
     int count (@Param("orderId") long orderId, @Param("beginTime") Date beginTime, @Param("endTime") Date endTime);
+
+    /**
+     * 查询该学生的预约课程数量
+     * @param studentId
+     * @return
+     */
+    int countByStudentId (@Param("studentId") long studentId);
+
+    /**
+     * 取消预约课程，更新状态
+     * @param orderId
+     * @return
+     */
+    int quit(@Param("orderId") long orderId);
+
+
 }

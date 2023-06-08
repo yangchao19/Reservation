@@ -18,6 +18,11 @@
         VALUES
         (#{orderId}, #{studentId}, #{curriculumId}, #{teacherId}, now(), #{money})
     </insert>
+    <update id="quit">
+        UPDATE `order`
+        SET status = -1
+        WHERE order_id = #{orderId}
+    </update>
     <delete id="deleteByCurriculumId" parameterType="long">
         DELETE FROM `order`
         WHERE curriculum_id = #{curriculumId}
@@ -32,22 +37,23 @@
             resultMap="order">
         SELECT order_id, student_id, curriculum_id, teacher_id, date, money
         FROM `order`
-        WHERE student_id = #{studentId}
+        WHERE student_id = #{studentId} AND status != -1
+        ORDER BY date ASC
     </select>
     <select id="query" resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
         SELECT order_id, student_id, curriculum_id, teacher_id, date, money
         FROM `order`
-        WHERE student_id = #{studentId} AND curriculum_id = #{curriculumId}
+        WHERE student_id = #{studentId} AND curriculum_id = #{curriculumId}  AND status != -1
     </select>
     <select id="queryByStartAndEndTime" resultType="com.yang.reservation.infrastructure.po.Order">
         SELECT order_id, student_id, curriculum_id, teacher_id, date, money
         FROM `order`
-        WHERE date BETWEEN #{startTime} AND #{endTime}
+        WHERE date BETWEEN #{startTime} AND #{endTime} AND status != -1
     </select>
     <select id="queryByOrderId" parameterType="long" resultType="com.yang.reservation.infrastructure.po.Order">
         SELECT order_id, student_id, curriculum_id, teacher_id, date, money
         FROM `order`
-        WHERE order_id = #{orderId}
+        WHERE order_id = #{orderId} AND status != -1
     </select>
     <select id="queryList" resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
         SELECT order_id, student_id, curriculum_id, teacher_id, date, money
@@ -61,6 +67,9 @@
             </if>
             <if test="endTime != null and endTime !=  ''">
                 `date` &lt;= #{endTime}
+            </if>
+            <if test="ture">
+                `status` != -1
             </if>
         </where>
         LIMIT #{page}, #{pageSize}
@@ -77,6 +86,26 @@
             <if test="endTime != null and endTime !=  ''">
                 #{endTime} - `date` > 0
             </if>
+            <if test="ture">
+                `status` != -1
+            </if>
         </where>
+    </select>
+    <select id="queryByCurriculumId"  resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        WHERE curriculum_id = #{curriculumId} AND student_id =#{studentId}
+    </select>
+    <select id="queryPageListByStudentId" resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
+        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+        FROM `order`
+        WHERE student_id = #{studentId} AND status != -1
+        ORDER BY date DESC
+        LIMIT #{page},#{pageSize}
+    </select>
+    <select id="countByStudentId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `order`
+        WHERE student_id = #{studentId} AND status != -1
     </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.yang.reservation.domain.order.service;
 import com.yang.reservation.application.IOrderService;
 import com.yang.reservation.common.Page;
 import com.yang.reservation.domain.order.model.OrderVO;
+import com.yang.reservation.domain.support.id.IIdGenerator;
 import com.yang.reservation.infrastructure.dao.ICurriculumDao;
 import com.yang.reservation.infrastructure.dao.IOrderDao;
 import com.yang.reservation.infrastructure.dao.IStudentDao;
@@ -15,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.IdGenerator;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -43,6 +45,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Resource
     private ITeacherDao teacherDao;
+
+    @Resource(name =  "snowflake")
+    private IIdGenerator idGenerator;
 
 
     @Override
@@ -80,7 +85,39 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public List<OrderVO> queryListById(long studentId) {
+    public Page<OrderVO> queryPageListByStudentId(long page, long pageSize, long studentId) {
+
+        //2. 查询订单信息，并转换类型
+        List<Order> orderList = orderDao.queryPageListByStudentId((page - 1) * pageSize, pageSize, studentId);
+
+        ArrayList<OrderVO> orderVOList = new ArrayList<>();
+
+        if (null != orderList) {
+            for (Order order : orderList) {
+                OrderVO orderVO = orderToVO(order);
+                orderVOList.add(orderVO);
+            }
+        }
+        //3. 查询订单总数
+        int count = orderDao.countByStudentId(studentId);
+
+        Page<OrderVO> orderVOPage = new Page<>();
+
+        if (orderList == null) {
+            orderVOPage.setCurrent(0);
+        }else {
+            orderVOPage.setCurrent(page);
+        }
+
+        orderVOPage.setSize(pageSize);
+        orderVOPage.setTotal(count);
+        orderVOPage.setRecords(orderVOList);
+        return orderVOPage;
+    }
+
+    @Override
+    public List<OrderVO> queryListByStudentId(long studentId) {
+
         List<Order> orderList = orderDao.queryListByStudentId(studentId);
 
 
@@ -95,6 +132,43 @@ public class OrderServiceImpl implements IOrderService {
         return null;
     }
 
+    @Override
+    public boolean addOrder(long studentId, long curriculumId) {
+        Curriculum curriculum = curriculumDao.queryCurriculumById(curriculumId);
+        Order order = new Order();
+        order.setOrderId(idGenerator.nextId());
+        order.setStudentId(studentId);
+        order.setCurriculumId(curriculumId);
+        order.setTeacherId(curriculum.getTeacherId());
+        orderDao.insert(order);
+
+        //TODO 扣减对应课程的库存
+        return true;
+    }
+
+    @Override
+    public boolean quitOrder(long orderId) {
+        int quit = orderDao.quit(orderId);
+        if (quit != 0) {
+            //TODO 退换占用库存
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Order queryByCurriculumId(long studentId, long curriculumId) {
+        return orderDao.queryByCurriculumId(studentId,curriculumId);
+    }
+
+
+
+    /**
+     * 将order 转化为 orderVO 对象
+     * @param order
+     * @return
+     */
     private OrderVO orderToVO(Order order) {
         OrderVO orderVO = new OrderVO();
 

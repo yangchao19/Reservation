@@ -132,3 +132,23 @@ i {
   text-align: left;
   color: #999999;
 }
+button.reserve-btn {
+  width: 100px;
+  height: 50px;
+  background-color: #4CAF50; /* 设置背景颜色 */
+  border: none; /* 去掉边框 */
+  color: white; /* 设置文字颜色 */
+  padding: 10px 20px; /* 设置内边距 */
+  text-align: center; /* 文字居中 */
+  text-decoration: none; /* 去掉下划线 */
+  display: inline-block; /* 设置为行内块元素 */
+  font-size: 16px; /* 设置字体大小 */
+  cursor: pointer; /* 鼠标悬停时显示手型 */
+  border-radius: 5px; /* 设置圆角 */
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3); /* 设置阴影 */
+}
+
+button.reserve-btn:hover {
+  background-color: #3e8e41; /* 鼠标悬停时改变背景颜色 */
+}
+

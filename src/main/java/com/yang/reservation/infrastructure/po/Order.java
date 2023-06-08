@@ -35,7 +35,7 @@ public class Order {
     private Long teacherId;
 
     /**
-     * 订单状态：0：待付款 1：已付款
+     * 订单状态：-1：已取消  0：待付款  1：已付款
      */
     private int status;
 
