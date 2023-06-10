@@ -142,16 +142,20 @@ public class OrderServiceImpl implements IOrderService {
         order.setTeacherId(curriculum.getTeacherId());
         orderDao.insert(order);
 
-        //TODO 扣减对应课程的库存
-        return true;
+        // 扣减对应课程的库存
+        int i = curriculumDao.decStock(curriculumId);
+
+        return i != 0;
     }
 
     @Override
     public boolean quitOrder(long orderId) {
         int quit = orderDao.quit(orderId);
+        Order order = orderDao.queryByOrderId(orderId);
         if (quit != 0) {
-            //TODO 退换占用库存
-            return true;
+            //退换占用库存
+            int i = curriculumDao.addStock(order.getCurriculumId());
+            return i != 0;
         }else{
             return false;
         }

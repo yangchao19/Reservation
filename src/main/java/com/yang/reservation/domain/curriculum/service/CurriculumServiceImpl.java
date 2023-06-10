@@ -115,4 +115,5 @@ public class CurriculumServiceImpl implements ICurriculumService {
     public List<Curriculum> queryListBySubject(int subject, int status) {
         return curriculumDao.queryListBySubject(subject,status);
     }
+
 }

@@ -8,12 +8,15 @@ import com.yang.reservation.infrastructure.po.Student;
 import com.yang.reservation.infrastructure.po.Teacher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @description:
@@ -29,6 +32,9 @@ public class StudentController {
 
     @Resource
     private IStudentService studentService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/page")
     public Return<Page<Student>> queryList (long page, long pageSize, String studentName) {
@@ -83,7 +89,14 @@ public class StudentController {
 
             //测试使用
             String code = "1234";
-            session.setAttribute(phone,code);
+
+            //1.将用户手机号和验证码存入session中
+            //session.setAttribute(phone,code);
+
+            //2.将用户的手机号和验证码存入redis中，并设置有效期五分钟
+            redisTemplate.opsForValue().set(phone,code,5, TimeUnit.MINUTES);
+
+
             logger.info("phone:{},code:{}",phone,code);
             return Return.success("发送验证码成功");
         }
@@ -96,7 +109,11 @@ public class StudentController {
         String code = map.get("code").toString();
 
         //1. 获取session中发送给用户的验证码
-        Object codeInSession = session.getAttribute(phone);
+        //Object codeInSession = session.getAttribute(phone);
+
+        //1.1 从redis中获取缓存的验证码
+        Object codeInSession = redisTemplate.opsForValue().get(phone);
+
 
         logger.info("登录信息 phone:{},code:{},codeInSession:{}",phone,code,codeInSession);
 
@@ -108,6 +125,9 @@ public class StudentController {
             //将用户id存入session中，标识用户已登录
             session.setAttribute("student",student.getStudentId());
             logger.info("登录成功studentId:{}",student.getStudentId());
+
+            //登陆成功后将redis中的验证码删除
+            redisTemplate.delete(phone);
             return Return.success(student);
         }
         return Return.error("验证码错误");

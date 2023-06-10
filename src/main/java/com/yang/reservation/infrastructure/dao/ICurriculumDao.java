@@ -76,4 +76,18 @@ public interface ICurriculumDao {
      * @return
      */
     List<Curriculum> queryListBySubject(@Param("subject") int subject, @Param("status") int status);
+
+    /**
+     * 扣减对应课程的库存
+     * @param curriculumId
+     * @return
+     */
+    int decStock(@Param("curriculumId") long curriculumId);
+
+    /**
+     * 恢复库存
+     * @param curriculumId
+     * @return
+     */
+    int addStock(@Param("curriculumId") long curriculumId);
 }

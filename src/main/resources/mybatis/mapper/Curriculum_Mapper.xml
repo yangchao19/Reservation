@@ -25,6 +25,7 @@
         (#{curriculumId}, #{curriculumName}, #{teacherId}, #{teacherName}, #{price}, #{stock}, #{stockUsed}, #{beginTime}, #{endTime}, #{info})
     </insert>
 
+
     <update id="updateCurriculum" parameterType="curriculum">
         UPDATE curriculum
         SET curriculum_name = #{curriculumName}, teacher_id = #{teacherId}, teacher_name = #{teacherName}, price = #{price}, stock = #{stock}, stock_used = #{stockUsed}, begin_time = #{beginTime}, end_time = #{endTime}, info = #{info}
@@ -34,6 +35,16 @@
         UPDATE curriculum
         SET stock_used = stock_used + 1
         Where stock - stock_used > 0 AND curriculum_id = #{curriculumId}
+    </update>
+    <update id="decStock">
+        UPDATE curriculum
+        SET stock_used = stock_used + 1
+        WHERE curriculum_id = #{curriculumId}
+    </update>
+    <update id="addStock">
+        UPDATE curriculum
+        SET stock_used = stock_used - 1
+        WHERE curriculum_id = #{curriculumId}
     </update>
 
     <delete id="deleteCurriculum">

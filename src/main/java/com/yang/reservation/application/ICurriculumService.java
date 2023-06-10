@@ -50,4 +50,5 @@ public interface ICurriculumService {
     List<SubjectVO> querySubject();
 
     List<Curriculum> queryListBySubject(int subject,int status);
+
 }
