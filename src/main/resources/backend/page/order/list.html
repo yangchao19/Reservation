@@ -221,11 +221,15 @@
            getOrderType (row) {
             let str = ''
             switch(row.status){
+                case -1:
+                    str =  '已取消'
+                    break
                 case 0:
                     str =  '待付款'
+                    break
                 case 1:
                     str =  '已付款'
-                break;
+                    break;
             }
             return str
           },
