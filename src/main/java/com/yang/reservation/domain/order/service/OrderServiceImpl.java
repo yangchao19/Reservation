@@ -16,7 +16,6 @@ import org.springframework.beans.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.IdGenerator;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -148,12 +147,15 @@ public class OrderServiceImpl implements IOrderService {
         return i != 0;
     }
 
+    //TODO 优化成事务
     @Override
     public boolean quitOrder(long orderId) {
         int quit = orderDao.quit(orderId);
         Order order = orderDao.queryByOrderId(orderId);
+        logger.info(String.valueOf(quit));
         if (quit != 0) {
             //退换占用库存
+            logger.info(order.getCurriculumId().toString());
             int i = curriculumDao.addStock(order.getCurriculumId());
             return i != 0;
         }else{
@@ -162,7 +164,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public Order queryByCurriculumId(long studentId, long curriculumId) {
+    public List<Order> queryByCurriculumId(long studentId, long curriculumId) {
         return orderDao.queryByCurriculumId(studentId,curriculumId);
     }
 

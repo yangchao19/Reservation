@@ -125,7 +125,7 @@
                                 window.location.href= '/front/index.html'
                         })   
                     }else{
-                        history.go(-1)
+                        history.go(-1);
                     }
                 },
                 initData(){
@@ -159,6 +159,10 @@
                         alert(res.msg)
                         // this.$notify({ type:'warning', message:res.msg});
                     }
+                    this.refreshPage();
+                },
+                refreshPage() {
+                    location.reload();
                 },
                 async orderDetails(item){
                     this.details = {}

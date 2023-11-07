@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Wheel</title>
+    <link rel="icon" href="./../images/favico.ico">
+    <!--element-ui的样式-->
+    <link rel="stylesheet" href="../../backend/plugins/element-ui/index.css" />
+    <!-- 引入样式  -->
+    <link rel="stylesheet" href="../styles/index.css" />
+    <!--引入vant样式-->
+    <link rel="stylesheet" href="../styles/vant.min.css"/>
+    <link rel="stylesheet" href="../styles/lottery.css"/>
+
+
+</head>
+<body>
+    <div id="app">
+        <lucky-wheel ref="myLucky"
+                     width="300px"
+                     height="300px"
+                     :prizes="prizes"
+                     :blocks="blocks"
+                     :buttons="buttons"
+                     @start="startCallback"
+                     @end="endCallback"
+        ></lucky-wheel>
+        <!-- 关闭按钮 -->
+        <button id="close-button" @click="closePage">关闭</button>
+    </div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="../../backend/plugins/vue/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="../../backend/plugins/element-ui/index.js"></script>
+    <!-- 引入vant组件 -->
+    <script src="./../js/vant.min.js"></script>
+    <!-- 引入axios -->
+    <script src="../../backend/plugins/axios/axios.min.js"></script>
+    <script src="https://unpkg.com/@vue/composition-api"></script>
+    <script src="https://unpkg.com/vue-demi@0.11.4"></script>
+    <script src="https://unpkg.com/@lucky-canvas/vue@0.1.11"></script>
+    <script>
+        Vue.component('lucky-wheel', VueLuckyCanvas.LuckyWheel);
+        new Vue({
+            el: '#app',
+            components: {
+                'lucky-wheel': VueLuckyCanvas.LuckyWheel
+            },
+            data: {
+                blocks: [{ padding: '10px', background: '#617df2' }],
+                prizes: [],
+                buttons: [
+                    { radius: '40%', background: '#617df2' },
+                    { radius: '35%', background: '#afc8ff' },
+                    {
+                        radius: '30%', background: '#869cfa',
+                        pointer: true,
+                        fonts: [{ text: '开始\n抽奖', top: '-10px' }]
+                    },
+                ],
+            },
+            created() {
+                this.initPrizeList();
+                this.userId = JSON.parse(sessionStorage.getItem("userinfo")).studentId
+            },
+            methods: {
+                initPrizeList() {
+                    fetch("/lottery/queryLucky?id=10001")
+                        .then(response => response.json())
+                        .then(data => {
+                            this.prizes = data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+                startCallback () {
+                    this.$refs.myLucky.play()
+                    setTimeout(() => {
+                        fetch(`/lottery/doDraw?userId=${this.userId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                let index = data;
+                                console.log(index);
+                                this.$refs.myLucky.stop(index);
+                            });
+                    }, 3000)
+                },
+                endCallback (prize) {
+                    console.log(prize)
+                    const prizeObj = JSON.parse(JSON.stringify(prize))
+                    const fontsText = prizeObj.fonts.map(font => font.text).join('/')
+                    alert(`恭喜您已中奖：${fontsText}`)
+                },
+                closePage() {
+                    this.showPage = false;
+                    window.history.back();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -48,7 +48,7 @@ public interface IOrderDao {
      * @param curriculumId
      * @return
      */
-    Order queryByCurriculumId(@Param("studentId") long studentId,@Param("curriculumId") long curriculumId);
+    List<Order> queryByCurriculumId(@Param("studentId") long studentId,@Param("curriculumId") long curriculumId);
 
     /**
      * 根据开始和截至时间查询订单

@@ -64,6 +64,6 @@ public interface IOrderService {
      * @param curriculumId
      * @return
      */
-    Order queryByCurriculumId(long studentId,long curriculumId);
+    List<Order> queryByCurriculumId(long studentId,long curriculumId);
 
 }

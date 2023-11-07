@@ -51,10 +51,10 @@
         FROM `order`
         WHERE date BETWEEN #{startTime} AND #{endTime} AND status != -1
     </select>
-    <select id="queryByOrderId" parameterType="long" resultType="com.yang.reservation.infrastructure.po.Order">
+    <select id="queryByOrderId" parameterType="long" resultMap="order" resultType="com.yang.reservation.infrastructure.po.Order">
         SELECT order_id, student_id, curriculum_id, teacher_id, date, money
         FROM `order`
-        WHERE order_id = #{orderId} AND status != -1
+        WHERE order_id = #{orderId}
     </select>
     <select id="queryList" resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
         SELECT order_id, student_id, curriculum_id, teacher_id, status, date, money
@@ -86,8 +86,8 @@
             </if>
         </where>
     </select>
-    <select id="queryByCurriculumId"  resultType="com.yang.reservation.infrastructure.po.Order" resultMap="order">
-        SELECT order_id, student_id, curriculum_id, teacher_id, date, money
+    <select id="queryByCurriculumId"   resultMap="order">
+        SELECT order_id, student_id, curriculum_id, status,teacher_id, date, money
         FROM `order`
         WHERE curriculum_id = #{curriculumId} AND student_id =#{studentId}
     </select>

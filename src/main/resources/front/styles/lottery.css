@@ -1,0 +1,12 @@
+#app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#close-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}

@@ -6,10 +6,10 @@ spring:
   datasource:
     username: root
     password: yc1234
-    url: jdbc:mysql://124.222.253.96/reservation?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://124.222.253.96:3306/reservation?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 124.222.253.96 #ip地址
+    host: 43.143.31.48 #124.222.253.96 #ip地址
     port: 6379 #端口号
     password:
     database: 0
@@ -23,3 +23,20 @@ spring:
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
   config-location: classpath:/mybatis/config/mybatis-config.xml
+
+dubbo:
+  application:
+    name: Lottery-API
+    version: 1.0.0
+  registry:
+    address: nacos://43.143.31.48:8848
+  consumer:
+    retries: 0
+    timeout: 10000
+  protocol:
+    name: dubbo
+    port: -1
+
+nacos:
+  discovery:
+    server-addr: 43.143.31.48:8848

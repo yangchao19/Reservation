@@ -71,11 +71,13 @@ public class OrderController {
 
         //1.检验是否已经预约过
 
-        Order order = orderService.queryByCurriculumId(studentId, curriculumId);
-        if (order != null) {
-            return Return.error("课程已经预约过，请勿重复预约");
+        List<Order> orderList = orderService.queryByCurriculumId(studentId, curriculumId);
+        for (Order order : orderList) {
+            if ((order != null) && (order.getStatus() != -1)) {
+                logger.info("课程id：{}，课程状态（-1为订单已取消；0为未付款；1为已付款）：{}",order.getId(),order.getStatus());
+                return Return.error("课程已经预约过，请勿重复预约");
+            }
         }
-
         //2.预约课程
         boolean b = orderService.addOrder(studentId, curriculumId);
         if (b) {
@@ -93,7 +95,7 @@ public class OrderController {
     }
 
     @PutMapping("/quit")
-    public Return<String> quitOrder(long orderId) {
+    public Return<String> quitOrder(@RequestParam long orderId) {
         boolean b = orderService.quitOrder(orderId);
         if (b) {
             return Return.success("取消成功");

@@ -17,7 +17,10 @@
     <link rel="stylesheet" href="styles/index.css" />
     <!--本页面内容的样式-->
     <link rel="stylesheet" href="styles/main.css" />
+    <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+    <script src="./js/box.js"></script>
   </head>
+
   <body>
     <div id="main" class="app">
       <div class="divHead">
@@ -30,7 +33,6 @@
           <img src="./images/logo.png"  class="logo"/>
           <div class="divDesc">
             <div class="divName">课程预约</div>
-
           </div>
         </div>
         <div class="divDesc">
@@ -64,6 +66,7 @@
         <div class="divLayerLeft"></div>
         <div class="divLayerRight"></div>
       </div>
+
 
       <!-- 查看弹框部分 -->
       <el-dialog
@@ -103,21 +106,31 @@
           </div>
         </div>
 
-      </el-dialog>
 
+      </el-dialog>
     </div>
+
+    <div id="signCorner" style="position: fixed; bottom: 10px; right: 10px; width: 50px; height: 50px; background-color: red; border-radius: 50%; z-index: 999;">
+        <a id="signButton" href="/front/page/lottery.html" style="display: block; width: 100%; height: 100%;"></a>
     </div>
-        <!-- 开发环境版本，包含了有帮助的命令行警告 -->
-        <script src="../backend/plugins/vue/vue.js"></script>
-        <!-- 引入组件库 -->
-        <script src="../backend/plugins/element-ui/index.js"></script>
-        <!-- 引入vant样式 -->
-        <script src="./js/vant.min.js"></script>
-        <!-- 引入axios -->
-        <script src="../backend/plugins/axios/axios.min.js"></script>
-        <script src="./js/request.js"></script>
-        <script src="./js/common.js"></script>
-        <script src="./api/main.js"></script>
+
+
+
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+      <script src="../backend/plugins/vue/vue.js"></script>
+      <!-- 引入组件库 -->
+      <script src="../backend/plugins/element-ui/index.js"></script>
+      <!-- 引入vant样式 -->
+      <script src="./js/vant.min.js"></script>
+      <!-- 引入axios -->
+      <script src="../backend/plugins/axios/axios.min.js"></script>
+
+      <script src="./js/request.js"></script>
+      <script src="./js/common.js"></script>
+      <script src="./api/main.js"></script>
+
+
+
   </body>
   <script>
       new Vue({
